@@ -7,4 +7,8 @@ urlpatterns = [
     path("home/<str:param>/", views.home, name="home_with_param"), # avec paramètre
     path("contact/", views.contact, name="contact"),
     path("about/", views.about, name="about"),
+    path('produits/', views.ListProduits, name='list_produits'),
+    path('produits/', views.ListProduits),
+    path('categories/', views.ListCategories),
+    path('statuts/', views.ListStatuts),
 ]
