@@ -1,2 +1,3 @@
-TutoDjango/monApp/__pycache__/
-TutoDjango/TutoDjango/__pycache__/
+TutoDjango/monApp/__pycache__/*
+TutoDjango/TutoDjango/__pycache__/*
+venv/
