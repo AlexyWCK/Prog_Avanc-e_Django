@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block contenu %}
+<h1>Liste des statuts</h1>
+<ul>
+{% for s in statuts %}
+    <li>{{ s.libelle }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

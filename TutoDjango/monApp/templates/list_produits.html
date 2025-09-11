@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block contenu %}
+<h1>Liste des produits</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nom produit</th>
+            <th>Prix</th>
+            <th>Date fabrication</th>
+            <th>Catégorie</th>
+            <th>Statut</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for prdt in prdts %}
+        <tr>
+            <td>{{ prdt.intituleProd }}</td>
+            <td>{{ prdt.prixUnitaireProd }}</td>
+            <td>{{ prdt.dateFabProd }}</td>
+            <td>{{ prdt.categorie.nomCat }}</td>
+            <td>{{ prdt.status.libelle }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

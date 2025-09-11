@@ -1,0 +1,30 @@
+{% load static %}
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Mon app DJANGO</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}">
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-primary mb-4">
+    <a class="navbar-brand" href="{% url 'monApp:home' %}">Accueil</a>
+    <a class="nav-link" href="{% url 'monApp:list_produits' %}">Produits</a>
+    <a class="nav-link" href="{% url 'monApp:list_categories' %}">Catégories</a>
+    <a class="nav-link" href="{% url 'monApp:list_statuts' %}">Statuts</a>
+    <a class="nav-link" href="{% url 'monApp:about' %}">About</a>
+    <a class="nav-link" href="{% url 'monApp:contact' %}">Contact</a>
+</nav>
+
+<main class="container">
+    {% block contenu %}{% endblock %}
+</main>
+
+<footer class="footer mt-4">
+    <div class="container">
+        <p>&copy; {% now "Y" %} Mon App Django</p>
+    </div>
+</footer>
+</body>
+</html>

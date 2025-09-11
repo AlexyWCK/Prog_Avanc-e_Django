@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block contenu %}
+<h1>Home</h1>
+{% if param %}
+<p>Bonjour {{ param }} !</p>
+{% else %}
+<p>Bienvenue sur la page d'accueil</p>
+{% endif %}
+{% endblock %}

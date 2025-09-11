@@ -3,44 +3,23 @@ from django.http import HttpResponse
 from .models import Produit, Categorie, Statut
 
 def home(request, param=None):
-    if param:
-        return HttpResponse(f"<h1>Home</h1><p>Bonjour {param} !</p>")
-    else:
-        return HttpResponse("<h1>Home</h1><p>Bienvenue sur la page d'accueil</p>")
+    context = {'param': param}
+    return render(request, 'home.html', context)
 
 def contact(request):
-    return HttpResponse("<h1>Contact Us</h1><p>Voici notre page de contact.</p>")
+    return render(request, 'contact.html')
 
 def about(request):
-    return HttpResponse("<h1>About Us</h1><p>Voici la page à propos de nous.</p>")
+    return render(request, 'about.html')
 
 def ListProduits(request):
     prdts = Produit.objects.all()
-    liste = "".join(f"<li>{p.intituleProd}</li>" for p in prdts)
-    html = f"""
-    <html>
-    <body>
-        <h1>Liste des produits</h1>
-        <ul>
-            {liste}
-        </ul>
-    </body>
-    </html>
-    """
-    return HttpResponse(html)
+    return render(request, 'list_produits.html', {'prdts': prdts})
 
 def ListCategories(request):
     ctgrs = Categorie.objects.all()
-    html = "<h2>Liste des catégories</h2><ul>"
-    for c in ctgrs:
-        html += f"<li>{c.nomCat}</li>"
-    html += "</ul>"
-    return HttpResponse(html)
+    return render(request, 'list_categories.html', {'categories': ctgrs})
 
 def ListStatuts(request):
     stts = Statut.objects.all()
-    html = "<ul>"
-    for s in stts:
-        html += f"<li>{s.libelle}</li>"
-    html += "</ul>"
-    return HttpResponse(html)
+    return render(request, 'list_statuts.html', {'statuts': stts})
