@@ -28,12 +28,13 @@ Ce TP m’a permis de comprendre le fonctionnement de Django, la gestion des mod
 
 # TD2 - Administration et redirection
 
-Pour le TD2, j’ai travaillé sur l’administration et l’amélioration de la navigation :  
+Pour ce TD, j’ai travaillé sur l’administration et la navigation :
 
-- **Création de l’interface admin** pour gérer les modèles `Produit`, `Categorie` et `Statut` depuis Django Admin  
-- **Inscription des modèles dans `admin.py`** pour pouvoir les manipuler via l’interface graphique  
-- **Ajout d’une redirection vers la page d’accueil** après certaines actions (ex : connexion ou ajout d’un objet)  
-- **Configuration des URL** pour que la page d’accueil soit accessible directement via `/` et non seulement via `/monApp/`  
-- **Test de navigation** entre les pages Home, Contact et About, et vérification que l’admin fonctionne correctement
+- **Interface admin Django** pour gérer `Produit`, `Categorie`, `Statut` et `Rayon`  
+- **Personnalisation** : colonnes visibles (`list_display`), modification directe (`list_editable`), boutons radio (`radio_fields`), recherche (`search_fields`), filtres (`list_filter`), hiérarchie par date (`date_hierarchy`), tri (`ordering`)  
+- **Relations** : ajout de produits directement dans la fiche `Categorie` via `ProduitInline`  
+- **Actions personnalisées** : mettre les produits en ligne ou hors ligne  
+- **Optimisation** : installation de Django Debug Toolbar pour vérifier le nombre de requêtes SQL  
+- **Redirections et navigation** : redirection après certaines actions et vérification de la navigation entre les pages  
 
-Ce TD m’a permis de découvrir l’interface d’administration Django, la gestion des redirections et l’amélioration de l’ergonomie de navigation de l’application.
+Ce TD m’a permis de découvrir l’admin Django, de personnaliser l’interface et d’optimiser l’accès aux données.
