@@ -1,26 +1,60 @@
 {% extends 'base.html' %}
+{% block title %}Produits{% endblock %}
 {% block contenu %}
-<h1>Liste des produits</h1>
-<table class="table">
-    <thead>
+<h2 class="mb-4">Liste des Produits</h2>
+
+<table class="table table-striped table-hover">
+    <thead class="table-primary">
         <tr>
-            <th>Nom produit</th>
+            <th>Référence</th>
+            <th>Intitulé</th>
             <th>Prix</th>
-            <th>Date fabrication</th>
             <th>Catégorie</th>
+            <th>Rayons</th>
             <th>Statut</th>
+            <th>Date de fabrication</th>
         </tr>
     </thead>
     <tbody>
-    {% for prdt in prdts %}
+        {% for produit in prdts %}
         <tr>
-            <td>{{ prdt.intituleProd }}</td>
-            <td>{{ prdt.prixUnitaireProd }}</td>
-            <td>{{ prdt.dateFabProd }}</td>
-            <td>{{ prdt.categorie.nomCat }}</td>
-            <td>{{ prdt.status.libelle }}</td>
+            <td>{{ produit.refProd }}</td>
+            <td>{{ produit.intituleProd }}</td>
+            <td>{{ produit.prixUnitaireProd }} €</td>
+            <td>
+                {% if produit.categorie %}
+                    {{ produit.categorie.nomCat }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+            <td>
+                {% for rayon in produit.rayons.all %}
+                    <span class="badge bg-secondary">{{ rayon.nomRayon }}</span>
+                {% empty %}
+                    Aucun
+                {% endfor %}
+            </td>
+            <td>
+                {% if produit.statut %}
+                    {{ produit.statut.libelle }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+            <td>
+                {% if produit.dateFabrication %}
+                    {{ produit.dateFabrication|date:"d/m/Y" }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
         </tr>
-    {% endfor %}
+        {% empty %}
+        <tr>
+            <td colspan="7" class="text-center">Aucun produit disponible</td>
+        </tr>
+        {% endfor %}
     </tbody>
 </table>
 {% endblock %}

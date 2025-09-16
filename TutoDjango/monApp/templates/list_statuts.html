@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
+{% block title %}Statuts{% endblock %}
 {% block contenu %}
-<h1>Liste des statuts</h1>
-<ul>
-{% for s in statuts %}
-    <li>{{ s.libelle }}</li>
-{% endfor %}
+<h2>Liste des Statuts</h2>
+<ul class="list-group">
+    {% for stt in statuts %}
+        <li class="list-group-item">{{ stt.libelle }}</li>
+    {% empty %}
+        <li class="list-group-item text-center">Aucun statut disponible</li>
+    {% endfor %}
 </ul>
 {% endblock %}

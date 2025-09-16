@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
+{% block title %}Catégories{% endblock %}
 {% block contenu %}
-<h1>Liste des catégories</h1>
-<ul>
-{% for c in categories %}
-    <li>{{ c.nomCat }}</li>
-{% endfor %}
+<h2>Liste des Catégories</h2>
+<ul class="list-group">
+    {% for cat in categories %}
+        <li class="list-group-item">{{ cat.nomCat }}</li>
+    {% empty %}
+        <li class="list-group-item text-center">Aucune catégorie disponible</li>
+    {% endfor %}
 </ul>
 {% endblock %}
