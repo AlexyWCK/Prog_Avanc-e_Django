@@ -58,3 +58,19 @@ Dans ce TP, j’ai travaillé sur l’amélioration du rendu et la structure des
 - **Navigation complète** : home, produits, catégories, statuts, about, contact
 
 Ce TP m’a permis de structurer correctement l’affichage des pages, de rendre le code plus propre et réutilisable, et de préparer le projet pour une gestion complète des modèles et CRUD.
+
+Séance suivante : 
+
+- **Refactor des vues** pour utiliser `render` et les templates au lieu de `HttpResponse` brut  
+- **Création de `base.html`** comme template principal avec barre de navigation et footer  
+- **Utilisation de blocs** (`{% block contenu %}`) pour insérer le contenu spécifique aux pages  
+- **Templates spécifiques** pour chaque page : `list_produits.html`, `detail_produit.html`, `ajouter_produit.html`  
+- **Liens dynamiques** avec `{% url %}` pour naviguer entre les pages  
+- **Chargement des fichiers statiques** avec `{% load static %}` pour CSS et Bootstrap  
+- **Navigation complète** : home, produits, catégories, statuts, about, contact  
+- **Changement de la relation Many-to-Many** avec le modèle `Contenir` pour une meilleure gestion des relations  
+- **Ajout de Bootstrap** pour améliorer le style et la présentation des pages  
+- **Ajout du bouton Admin** dans la barre de navigation  
+- **Style amélioré** des pages : boutons, mise en page, typographie, et mise en valeur du contenu  
+
+Ce TP m’a permis de structurer correctement l’affichage des pages, de rendre le code plus propre et réutilisable, et de préparer le projet pour une gestion complète des modèles et du CRUD.
