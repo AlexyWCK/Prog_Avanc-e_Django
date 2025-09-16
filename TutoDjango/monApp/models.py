@@ -13,6 +13,8 @@ class Statut(models.Model):
 
     def __str__(self):
         return self.libelle
+    
+#Essaie de la relation Many-to-Many
 
 
 class Produit(models.Model):

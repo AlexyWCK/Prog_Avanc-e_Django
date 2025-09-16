@@ -16,13 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from django.http import HttpResponse
+from django.shortcuts import redirect
 
-def home(request):
-    return HttpResponse("Bienvenue sur la page d'accueil !")
+def redirect_to_monapp(request):
+    return redirect('monApp:home')
 
 urlpatterns = [
-    path('', home),
+    path('', redirect_to_monapp),
     path('monApp/', include('monApp.urls')),
     path('admin/', admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
