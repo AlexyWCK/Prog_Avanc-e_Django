@@ -2,3 +2,4 @@ asgiref==3.9.1
 Django==5.2.5
 sqlparse==0.5.3
 django-debug-toolbar==5.1
+django-bootstrap5
