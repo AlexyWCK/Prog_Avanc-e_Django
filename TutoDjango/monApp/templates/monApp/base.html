@@ -31,6 +31,14 @@
                 </li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'monApp:about' %}">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'monApp:contact' %}">Contact</a></li>
+
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'monApp:logout' %}">Déconnexion</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'monApp:login' %}">Connexion</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'monApp:register' %}">Inscription</a></li>
+                {% endif %}
+
                 <li class="nav-item ms-3">
                     <a href="/admin/" class="btn btn-light text-dark fw-bold">Admin</a>
                 </li>

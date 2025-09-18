@@ -1,25 +1,100 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView, LogoutView
+from django.shortcuts import render, redirect
+from django.views.generic import TemplateView, ListView, DetailView
 from .models import Produit, Categorie, Statut
 
-def home(request, param=None):
-    context = {'param': param}
-    return render(request, 'home.html', context)
+class HomeView(TemplateView):
+    template_name = "monApp/page_home.html"
 
-def contact(request):
-    return render(request, 'contact.html')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['param'] = self.kwargs.get('param', None)
+        context['titreh1'] = "Hello DJANGO"
+        context['titretitre'] = "Accueil"
+        context['page_home'] = True
+        return context
 
-def about(request):
-    return render(request, 'about.html')
+class AboutView(TemplateView):
+    template_name = "monApp/page_home.html"
 
-def ListProduits(request):
-    prdts = Produit.objects.all()
-    return render(request, 'list_produits.html', {'prdts': prdts})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titreh1'] = "About Us"
+        context['titretitre'] = "About"
+        context['page_home'] = False
+        context['param'] = None
+        return context
 
-def ListCategories(request):
-    ctgrs = Categorie.objects.all()
-    return render(request, 'list_categories.html', {'categories': ctgrs})
+class ContactView(TemplateView):
+    template_name = "monApp/page_home.html"
 
-def ListStatuts(request):
-    stts = Statut.objects.all()
-    return render(request, 'list_statuts.html', {'statuts': stts})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titreh1'] = "Contact Us"
+        context['titretitre'] = "Contact"
+        context['page_home'] = False
+        context['param'] = None
+        return context
+
+class ListProduitsView(ListView):
+    model = Produit
+    template_name = "monApp/list_produits.html"
+    context_object_name = "prdts"
+
+class ProduitDetailView(DetailView):
+    model = Produit
+    template_name = "monApp/detail_produit.html"
+    context_object_name = "prdt"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = f"Détails du produit : {self.object.intituleProd}"
+        return context
+
+class ListCategoriesView(ListView):
+    model = Categorie
+    template_name = "monApp/list_categories.html"
+    context_object_name = "categories"
+
+class ListStatutsView(ListView):
+    model = Statut
+    template_name = "monApp/list_statuts.html"
+    context_object_name = "statuts"
+
+#Partie Connexion
+
+class ConnectView(LoginView):
+    template_name = 'monApp/page_login.html'
+
+    def post(self, request, **kwargs):
+        lgn = request.POST.get('username', False)
+        pswrd = request.POST.get('password', False)
+        user = authenticate(username=lgn, password=pswrd)
+        if user is not None and user.is_active:
+            login(request, user)
+            return render(request, 'monApp/page_home.html', {
+                'param': lgn,
+                'titreh1': "Hello DJANGO",
+                'titretitre': "Accueil",
+                'page_home': True
+            })
+        else:
+            return render(request, 'monApp/page_register.html')
+
+class RegisterView(TemplateView):
+    template_name = 'monApp/page_register.html'
+
+    def post(self, request, **kwargs):
+        username = request.POST.get('username', False)
+        mail = request.POST.get('mail', False)
+        password = request.POST.get('password', False)
+        if username and mail and password:
+            user = User.objects.create_user(username=username, email=mail, password=password)
+            user.save()
+            return redirect('monApp:login')
+        return render(request, self.template_name)
+
+class DisconnectView(LogoutView):
+    next_page = 'monApp:home'
