@@ -4,12 +4,11 @@ from . import views
 app_name = 'monApp'
 
 urlpatterns = [
-    path("", views.home, name="home"),
-    path("home/", views.home, name="home_default"),
-    path("home/<str:param>/", views.home, name="home_with_param"),
-    path("contact/", views.contact, name="contact"),
-    path("about/", views.about, name="about"),
-    path('produits/', views.ListProduits, name='list_produits'),
-    path('categories/', views.ListCategories, name='list_categories'),
-    path('statuts/', views.ListStatuts, name='list_statuts'),
+    path("home/", views.HomeView.as_view(), name="home"),
+    path("home/<str:param>/", views.HomeView.as_view(), name="home_with_param"),
+    path("contact/", views.ContactView.as_view(), name="contact"),
+    path("about/", views.AboutView.as_view(), name="about"),
+    path('produits/', views.ListProduitsView.as_view(), name='list_produits'),
+    path('categories/', views.ListCategoriesView.as_view(), name='list_categories'),
+    path('statuts/', views.ListStatutsView.as_view(), name='list_statuts'),
 ]

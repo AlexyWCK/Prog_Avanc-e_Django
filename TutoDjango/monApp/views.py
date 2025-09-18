@@ -1,25 +1,31 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.views.generic import TemplateView, ListView
 from .models import Produit, Categorie, Statut
 
-def home(request, param=None):
-    context = {'param': param}
-    return render(request, 'home.html', context)
+class HomeView(TemplateView):
+    template_name = "monApp/home.html"
 
-def contact(request):
-    return render(request, 'contact.html')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['param'] = self.kwargs.get('param', None)
+        return context
 
-def about(request):
-    return render(request, 'about.html')
+class ContactView(TemplateView):
+    template_name = "monApp/contact.html"
 
-def ListProduits(request):
-    prdts = Produit.objects.all()
-    return render(request, 'list_produits.html', {'prdts': prdts})
+class AboutView(TemplateView):
+    template_name = "monApp/about.html"
 
-def ListCategories(request):
-    ctgrs = Categorie.objects.all()
-    return render(request, 'list_categories.html', {'categories': ctgrs})
+class ListProduitsView(ListView):
+    model = Produit
+    template_name = "monApp/list_produits.html"
+    context_object_name = "prdts"
 
-def ListStatuts(request):
-    stts = Statut.objects.all()
-    return render(request, 'list_statuts.html', {'statuts': stts})
+class ListCategoriesView(ListView):
+    model = Categorie
+    template_name = "monApp/list_categories.html"
+    context_object_name = "categories"
+
+class ListStatutsView(ListView):
+    model = Statut
+    template_name = "monApp/list_statuts.html"
+    context_object_name = "statuts"
