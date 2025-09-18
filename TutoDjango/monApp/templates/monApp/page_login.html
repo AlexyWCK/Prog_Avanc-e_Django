@@ -1,0 +1,20 @@
+{% extends 'monApp/base.html' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block contenu %}
+<div class="align-center col-8 offset-2 my-5">
+    <h2 class="mb-3">Se connecter</h2>
+    <hr/>
+    <form method="POST" action="{% url 'monApp:login' %}" autocomplete="off">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label>Identifiant</label>
+            <input class="form-control" type="text" name="username" placeholder="Utilisateur">
+            <label>Mot de Passe</label>
+            <input class="form-control" type="password" name="password" placeholder="Mot de passe">
+        </div>
+        <button type="submit" class="btn btn-success mt-2">Se connecter</button>
+    </form>
+</div>
+{% endblock %}

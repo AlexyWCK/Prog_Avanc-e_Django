@@ -1,4 +1,7 @@
-from django.shortcuts import render
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView, LogoutView
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, DetailView
 from .models import Produit, Categorie, Statut
 
@@ -59,3 +62,39 @@ class ListStatutsView(ListView):
     model = Statut
     template_name = "monApp/list_statuts.html"
     context_object_name = "statuts"
+
+#Partie Connexion
+
+class ConnectView(LoginView):
+    template_name = 'monApp/page_login.html'
+
+    def post(self, request, **kwargs):
+        lgn = request.POST.get('username', False)
+        pswrd = request.POST.get('password', False)
+        user = authenticate(username=lgn, password=pswrd)
+        if user is not None and user.is_active:
+            login(request, user)
+            return render(request, 'monApp/page_home.html', {
+                'param': lgn,
+                'titreh1': "Hello DJANGO",
+                'titretitre': "Accueil",
+                'page_home': True
+            })
+        else:
+            return render(request, 'monApp/page_register.html')
+
+class RegisterView(TemplateView):
+    template_name = 'monApp/page_register.html'
+
+    def post(self, request, **kwargs):
+        username = request.POST.get('username', False)
+        mail = request.POST.get('mail', False)
+        password = request.POST.get('password', False)
+        if username and mail and password:
+            user = User.objects.create_user(username=username, email=mail, password=password)
+            user.save()
+            return redirect('monApp:login')
+        return render(request, self.template_name)
+
+class DisconnectView(LogoutView):
+    next_page = 'monApp:home'

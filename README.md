@@ -42,7 +42,6 @@ Pour ce TD, j’ai travaillé sur l’administration et la navigation :
 - **Optimisation** : installation de Django Debug Toolbar pour vérifier le nombre de requêtes SQL  
 - **Redirections et navigation** : redirection après certaines actions et vérification de la navigation entre les pages  
 
-Ce TD m’a permis de découvrir l’admin Django, de personnaliser l’interface et d’optimiser l’accès aux données.
 ___
 
 # TP2 - Templates et refactor
@@ -57,7 +56,6 @@ Dans ce TP, j’ai travaillé sur l’amélioration du rendu et la structure des
 - **Chargement des fichiers statiques** avec `{% load static %}` pour CSS et Bootstrap  
 - **Navigation complète** : home, produits, catégories, statuts, about, contact
 
-Ce TP m’a permis de structurer correctement l’affichage des pages, de rendre le code plus propre et réutilisable, et de préparer le projet pour une gestion complète des modèles et CRUD.
 
 Séance suivante : 
 
@@ -73,4 +71,14 @@ Séance suivante :
 - **Ajout du bouton Admin** dans la barre de navigation  
 - **Style amélioré** des pages : boutons, mise en page, typographie, et mise en valeur du contenu  
 
-Ce TP m’a permis de structurer correctement l’affichage des pages, de rendre le code plus propre et réutilisable, et de préparer le projet pour une gestion complète des modèles et du CRUD.
+
+# TD3 - Détails des produits et début de l’authentification
+
+Pour ce TD, j’ai ajouté :
+
+- **Page détails du produit** : `detail_produit.html` pour afficher toutes les informations d’un produit (`référence`, `intitulé`, `prix`, `catégorie`, `statut`, `rayons`, `date de fabrication`)  
+- **Navigation vers la page détail** depuis la liste des produits avec un bouton "Voir"  
+- **Refactor des templates existants** pour améliorer l’affichage et la lisibilité  
+- **Début du système d’authentification** : création des vues `ConnectView`, `RegisterView` et `DisconnectView` pour gérer la connexion, l’inscription et la déconnexion  
+- **Templates pour login, register et logout** : `page_login.html`, `page_register.html`, `page_logout.html`  
+- **Barre de navigation conditionnelle** selon l’état de connexion de l’utilisateur (`user.is_authenticated`) (pas encore fonctionnel)
