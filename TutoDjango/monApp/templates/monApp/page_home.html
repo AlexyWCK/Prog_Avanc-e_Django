@@ -1,6 +1,11 @@
 {% extends 'monApp/base.html' %}
-{% block title %}Accueil{% endblock %}
+
+{% block title %}
+{{ titretitre }}
+{% endblock %}
+
 {% block contenu %}
+{% if page_home %}
 <div class="text-center my-5">
     <h1>Bienvenue sur Mon App Django</h1>
     {% if param %}
@@ -10,4 +15,7 @@
     {% endif %}
     <a href="{% url 'monApp:list_produits' %}" class="btn btn-dark mt-3">Voir les produits</a>
 </div>
+{% else %}
+<h1>{{ titreh1 }}</h1>
+{% endif %}
 {% endblock %}

@@ -2,18 +2,37 @@ from django.views.generic import TemplateView, ListView
 from .models import Produit, Categorie, Statut
 
 class HomeView(TemplateView):
-    template_name = "monApp/home.html"
+    template_name = "monApp/page_home.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['param'] = self.kwargs.get('param', None)
+        context['titreh1'] = "Hello DJANGO"
+        context['titretitre'] = "Accueil"
+        context['page_home'] = True
+        return context
+
+class AboutView(TemplateView):
+    template_name = "monApp/page_home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titreh1'] = "About Us"
+        context['titretitre'] = "About"
+        context['page_home'] = False
+        context['param'] = None
         return context
 
 class ContactView(TemplateView):
-    template_name = "monApp/contact.html"
+    template_name = "monApp/page_home.html"
 
-class AboutView(TemplateView):
-    template_name = "monApp/about.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titreh1'] = "Contact Us"
+        context['titretitre'] = "Contact"
+        context['page_home'] = False
+        context['param'] = None
+        return context
 
 class ListProduitsView(ListView):
     model = Produit
