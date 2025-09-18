@@ -2,7 +2,6 @@
 {% block title %}Produits{% endblock %}
 {% block contenu %}
 <h2 class="mb-4">Liste des Produits</h2>
-
 <table class="table table-striped table-hover">
     <thead class="table-primary">
         <tr>
@@ -13,6 +12,7 @@
             <th>Rayons</th>
             <th>Statut</th>
             <th>Date de fabrication</th>
+            <th>Détail</th>
         </tr>
     </thead>
     <tbody>
@@ -21,39 +21,18 @@
             <td>{{ produit.refProd }}</td>
             <td>{{ produit.intituleProd }}</td>
             <td>{{ produit.prixUnitaireProd }} €</td>
-            <td>
-                {% if produit.categorie %}
-                    {{ produit.categorie.nomCat }}
-                {% else %}
-                    N/A
-                {% endif %}
-            </td>
+            <td>{% if produit.categorie %}{{ produit.categorie.nomCat }}{% else %}N/A{% endif %}</td>
             <td>
                 {% for rayon in produit.rayons.all %}
                     <span class="badge bg-secondary">{{ rayon.nomRayon }}</span>
-                {% empty %}
-                    Aucun
-                {% endfor %}
+                {% empty %} Aucun {% endfor %}
             </td>
-            <td>
-                {% if produit.statut %}
-                    {{ produit.statut.libelle }}
-                {% else %}
-                    N/A
-                {% endif %}
-            </td>
-            <td>
-                {% if produit.dateFabrication %}
-                    {{ produit.dateFabrication|date:"d/m/Y" }}
-                {% else %}
-                    N/A
-                {% endif %}
-            </td>
+            <td>{% if produit.statut %}{{ produit.statut.libelle }}{% else %}N/A{% endif %}</td>
+            <td>{% if produit.dateFabrication %}{{ produit.dateFabrication|date:"d/m/Y" }}{% else %}N/A{% endif %}</td>
+            <td><a href="{% url 'monApp:detail_produit' produit.pk %}" class="btn btn-primary btn-sm">Voir</a></td>
         </tr>
         {% empty %}
-        <tr>
-            <td colspan="7" class="text-center">Aucun produit disponible</td>
-        </tr>
+        <tr><td colspan="8" class="text-center">Aucun produit disponible</td></tr>
         {% endfor %}
     </tbody>
 </table>

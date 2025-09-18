@@ -1,4 +1,5 @@
-from django.views.generic import TemplateView, ListView
+from django.shortcuts import render
+from django.views.generic import TemplateView, ListView, DetailView
 from .models import Produit, Categorie, Statut
 
 class HomeView(TemplateView):
@@ -38,6 +39,16 @@ class ListProduitsView(ListView):
     model = Produit
     template_name = "monApp/list_produits.html"
     context_object_name = "prdts"
+
+class ProduitDetailView(DetailView):
+    model = Produit
+    template_name = "monApp/detail_produit.html"
+    context_object_name = "prdt"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = f"Détails du produit : {self.object.intituleProd}"
+        return context
 
 class ListCategoriesView(ListView):
     model = Categorie
