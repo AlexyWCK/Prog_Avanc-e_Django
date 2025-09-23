@@ -59,10 +59,33 @@ class ListCategoriesView(ListView):
     template_name = "monApp/list_categories.html"
     context_object_name = "categories"
 
+class CategorieDetailView(DetailView):
+    model = Categorie
+    template_name = "monApp/detail_categorie.html"
+    context_object_name = "cat"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = f"Détails de la catégorie : {self.object.nomCat}"
+        context['produits'] = self.object.produits.all()
+        return context
+
 class ListStatutsView(ListView):
     model = Statut
     template_name = "monApp/list_statuts.html"
     context_object_name = "statuts"
+
+class StatutDetailView(DetailView):
+    model = Statut
+    template_name = "monApp/detail_statut.html"
+    context_object_name = "stt"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = f"Détails du statut : {self.object.libelle}"
+        context['produits'] = self.object.produits.all()
+        return context
+
 
 #Partie Connexion
 

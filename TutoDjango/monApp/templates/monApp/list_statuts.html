@@ -4,7 +4,10 @@
 <h2>Liste des Statuts</h2>
 <ul class="list-group">
     {% for stt in statuts %}
-        <li class="list-group-item">{{ stt.libelle }}</li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ stt.libelle }}
+            <a href="{% url 'monApp:detail_statut' stt.pk %}" class="btn btn-primary btn-sm">Voir</a>
+        </li>
     {% empty %}
         <li class="list-group-item text-center">Aucun statut disponible</li>
     {% endfor %}

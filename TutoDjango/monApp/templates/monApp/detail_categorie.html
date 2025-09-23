@@ -1,0 +1,22 @@
+{% extends 'monApp/base.html' %}
+{% block title %}Détails : {{ cat.nomCat }}{% endblock %}
+{% block contenu %}
+<h1>{{ titremenu }}</h1>
+<ul class="list-group mb-3">
+    <li class="list-group-item"><strong>ID :</strong> {{ cat.idCat }}</li>
+    <li class="list-group-item"><strong>Nom :</strong> {{ cat.nomCat }}</li>
+</ul>
+
+<h3>Produits de cette catégorie :</h3>
+<ul class="list-group mb-3">
+    {% for produit in produits %}
+        <li class="list-group-item">
+            <a href="{% url 'monApp:detail_produit' produit.pk %}">{{ produit.intituleProd }}</a>
+        </li>
+    {% empty %}
+        <li class="list-group-item text-center">Aucun produit pour cette catégorie</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'monApp:list_categories' %}" class="btn btn-dark">Retour à la liste</a>
+{% endblock %}
