@@ -1,5 +1,5 @@
 {% load static %}
-{% load static django_bootstrap5 %}
+{% load django_bootstrap5 %}
 
 <!doctype html>
 <html lang="fr">
@@ -18,7 +18,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="{% url 'monApp:home' %}">Accueil</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'monApp:home' %}">Accueil</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="produitsDropdown" role="button" data-bs-toggle="dropdown">
                         Produits
@@ -29,15 +31,27 @@
                         <li><a class="dropdown-item" href="{% url 'monApp:list_statuts' %}">Statuts</a></li>
                     </ul>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'monApp:about' %}">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'monApp:contact' %}">Contact</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'monApp:about' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'monApp:contact' %}">Contact</a>
+                </li>
 
                 {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'monApp:logout' %}">Déconnexion</a></li>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'monApp:login' %}">Connexion</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'monApp:register' %}">Inscription</a></li>
-                {% endif %}
+                <li class="nav-item">
+                    <form method="post" action="{% url 'monApp:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link btn btn-link"
+                                style="display:inline; padding:0; border:none; background:none; margin-top:8px;">
+                            Déconnexion
+                        </button>
+                    </form>
+                </li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'monApp:login' %}">Connexion</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'monApp:register' %}">Inscription</a></li>
+            {% endif %}
 
                 <li class="nav-item ms-3">
                     <a href="/admin/" class="btn btn-light text-dark fw-bold">Admin</a>

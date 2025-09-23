@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, DetailView
 from .models import Produit, Categorie, Statut
+from django.urls import reverse
 
 class HomeView(TemplateView):
     template_name = "monApp/page_home.html"
@@ -58,10 +59,33 @@ class ListCategoriesView(ListView):
     template_name = "monApp/list_categories.html"
     context_object_name = "categories"
 
+class CategorieDetailView(DetailView):
+    model = Categorie
+    template_name = "monApp/detail_categorie.html"
+    context_object_name = "cat"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = f"Détails de la catégorie : {self.object.nomCat}"
+        context['produits'] = self.object.produits.all()
+        return context
+
 class ListStatutsView(ListView):
     model = Statut
     template_name = "monApp/list_statuts.html"
     context_object_name = "statuts"
+
+class StatutDetailView(DetailView):
+    model = Statut
+    template_name = "monApp/detail_statut.html"
+    context_object_name = "stt"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = f"Détails du statut : {self.object.libelle}"
+        context['produits'] = self.object.produits.all()
+        return context
+
 
 #Partie Connexion
 
@@ -69,19 +93,15 @@ class ConnectView(LoginView):
     template_name = 'monApp/page_login.html'
 
     def post(self, request, **kwargs):
-        lgn = request.POST.get('username', False)
-        pswrd = request.POST.get('password', False)
+        lgn = request.POST.get('username')
+        pswrd = request.POST.get('password')
         user = authenticate(username=lgn, password=pswrd)
         if user is not None and user.is_active:
             login(request, user)
-            return render(request, 'monApp/page_home.html', {
-                'param': lgn,
-                'titreh1': "Hello DJANGO",
-                'titretitre': "Accueil",
-                'page_home': True
-            })
+            return redirect(reverse('monApp:home'))
         else:
             return render(request, 'monApp/page_register.html')
+
 
 class RegisterView(TemplateView):
     template_name = 'monApp/page_register.html'
@@ -98,3 +118,4 @@ class RegisterView(TemplateView):
 
 class DisconnectView(LogoutView):
     next_page = 'monApp:home'
+

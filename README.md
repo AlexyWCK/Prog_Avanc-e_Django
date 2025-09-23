@@ -82,3 +82,14 @@ Pour ce TD, j’ai ajouté :
 - **Début du système d’authentification** : création des vues `ConnectView`, `RegisterView` et `DisconnectView` pour gérer la connexion, l’inscription et la déconnexion  
 - **Templates pour login, register et logout** : `page_login.html`, `page_register.html`, `page_logout.html`  
 - **Barre de navigation conditionnelle** selon l’état de connexion de l’utilisateur (`user.is_authenticated`) (pas encore fonctionnel)
+
+
+Pour ce TD (23/09), j’ai ajouté :
+
+- **Page détails de la catégorie** : `detail_categorie.html` pour afficher les informations d’une catégorie et ses produits associés  
+- **Navigation vers la page détail catégorie** depuis la liste des catégories  
+- **Page détails du statut** : `detail_statut.html` pour afficher les informations d’un statut et les produits associés  
+- **Navigation vers la page détail statut** depuis la liste des statuts avec un bouton "Voir"  
+- **Barre de navigation avec login/logout** selon l’état de connexion de l’utilisateur (`user.is_authenticated`) avec un bouton de déconnexion fonctionnel
+- **Système d’authentification fonctionnel** : Correction des classes :`ConnectView`, `RegisterView` et `DisconnectView`.
+
