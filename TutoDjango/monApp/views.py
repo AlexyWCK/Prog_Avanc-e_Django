@@ -8,6 +8,8 @@ from django.urls import reverse
 from django.contrib import messages
 from .models import Produit, Categorie, Statut
 from .forms import ContactUsForm
+from django.shortcuts import render, redirect
+from .forms import ProduitForm
 
 # --- Pages principales ---
 
@@ -145,3 +147,15 @@ def ContactView(request):
 
 class EmailSentView(TemplateView):
     template_name = "monApp/email_sent.html"
+
+
+def ProduitCreate(request):
+    if request.method == 'POST':
+        form = ProduitForm(request.POST)
+        if form.is_valid():
+            prdt = form.save()
+            return redirect('monApp:detail_produit', prdt.pk)
+    else:
+        form = ProduitForm()
+
+    return render(request, "monApp/create_produit.html", {'form': form})
