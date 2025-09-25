@@ -93,3 +93,10 @@ Pour ce TD (23/09), j’ai ajouté :
 - **Barre de navigation avec login/logout** selon l’état de connexion de l’utilisateur (`user.is_authenticated`) avec un bouton de déconnexion fonctionnel
 - **Système d’authentification fonctionnel** : Correction des classes :`ConnectView`, `RegisterView` et `DisconnectView`.
 
+Pour ce TD (25/09), j’ai ajouté :
+
+- **Gestion du bug Inscription (Même compte)** : Modification de la classe `RegisterView` pour gérer l'erreur si le compte existe déjà.
+- **Ajout d'un formulaire de contact** : Modification de `page_home.html`, ajout d'une nouvelle classe dans views.py : `ContactView` avec son url.
+- **Ajout d'une redirection vers une page de confirmation** : Une fois le formulaire envoyé, l'utilisateur est redirigé vers une page de confirmation `email_sent.html`
+
+  
