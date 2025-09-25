@@ -21,4 +21,9 @@ urlpatterns = [
 
     path("contact/", views.ContactView, name="contact"),
     path("email-sent/", views.EmailSentView.as_view(), name="email-sent"),
+
+    path('produit/create/', views.ProduitCreate, name='crt-prdt'),
+    path('produit/<int:pk>/', views.ProduitDetailView.as_view(), name='detail_produit'),
+    path('produits/', views.ListProduitsView.as_view(), name='list_produits')
+
 ]
