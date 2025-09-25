@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, DetailView
 from .models import Produit, Categorie, Statut
 from django.urls import reverse
+from django.contrib import messages
 
 class HomeView(TemplateView):
     template_name = "monApp/page_home.html"
@@ -107,14 +108,23 @@ class RegisterView(TemplateView):
     template_name = 'monApp/page_register.html'
 
     def post(self, request, **kwargs):
-        username = request.POST.get('username', False)
-        mail = request.POST.get('mail', False)
-        password = request.POST.get('password', False)
-        if username and mail and password:
-            user = User.objects.create_user(username=username, email=mail, password=password)
-            user.save()
-            return redirect('monApp:login')
-        return render(request, self.template_name)
+        username = request.POST.get('username', '').strip()
+        mail = request.POST.get('mail', '').strip()
+        password = request.POST.get('password', '').strip()
+
+        if not (username and mail and password):
+            messages.error(request, "Tous les champs sont obligatoires.")
+            return render(request, self.template_name)
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Ce nom d’utilisateur est déjà pris.")
+            return render(request, self.template_name)
+
+        user = User.objects.create_user(username=username, email=mail, password=password)
+        user.save()
+        messages.success(request, "Inscription réussie ! Vous pouvez maintenant vous connecter.")
+        return redirect('monApp:login')
+
 
 class DisconnectView(LogoutView):
     next_page = 'monApp:home'

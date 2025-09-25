@@ -6,13 +6,26 @@
 <div class="align-center col-8 offset-2 my-5">
     <h2 class="mb-3">S'inscrire</h2>
     <hr/>
+
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <form method="POST" action="{% url 'monApp:register' %}" autocomplete="off">
         {% csrf_token %}
         <div class="form-group mb-3">
             <label>Identifiant</label>
-            <input class="form-control" type="text" name="username" placeholder="Utilisateur">
+            <input class="form-control" type="text" name="username" placeholder="Utilisateur" value="{{ request.POST.username|default:'' }}">
+            
             <label>Email</label>
-            <input class="form-control" type="email" name="mail" placeholder="Email">
+            <input class="form-control" type="email" name="mail" placeholder="Email" value="{{ request.POST.mail|default:'' }}">
+            
             <label>Mot de Passe</label>
             <input class="form-control" type="password" name="password" placeholder="Mot de passe">
         </div>
