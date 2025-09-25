@@ -3,8 +3,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, DetailView
-from .models import Produit, Categorie, Statut
+from django.core.mail import send_mail
 from django.urls import reverse
+from django.contrib import messages
+from .models import Produit, Categorie, Statut
+from .forms import ContactUsForm
+
+# --- Pages principales ---
 
 class HomeView(TemplateView):
     template_name = "monApp/page_home.html"
@@ -28,16 +33,7 @@ class AboutView(TemplateView):
         context['param'] = None
         return context
 
-class ContactView(TemplateView):
-    template_name = "monApp/page_home.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titreh1'] = "Contact Us"
-        context['titretitre'] = "Contact"
-        context['page_home'] = False
-        context['param'] = None
-        return context
+# --- Liste et détails des objets ---
 
 class ListProduitsView(ListView):
     model = Produit
@@ -86,8 +82,7 @@ class StatutDetailView(DetailView):
         context['produits'] = self.object.produits.all()
         return context
 
-
-#Partie Connexion
+# --- Authentification ---
 
 class ConnectView(LoginView):
     template_name = 'monApp/page_login.html'
@@ -100,22 +95,53 @@ class ConnectView(LoginView):
             login(request, user)
             return redirect(reverse('monApp:home'))
         else:
-            return render(request, 'monApp/page_register.html')
-
+            messages.error(request, "Nom d’utilisateur ou mot de passe incorrect.")
+            return render(request, self.template_name)
 
 class RegisterView(TemplateView):
     template_name = 'monApp/page_register.html'
 
     def post(self, request, **kwargs):
-        username = request.POST.get('username', False)
-        mail = request.POST.get('mail', False)
-        password = request.POST.get('password', False)
-        if username and mail and password:
-            user = User.objects.create_user(username=username, email=mail, password=password)
-            user.save()
-            return redirect('monApp:login')
-        return render(request, self.template_name)
+        username = request.POST.get('username', '').strip()
+        mail = request.POST.get('mail', '').strip()
+        password = request.POST.get('password', '').strip()
+
+        if not (username and mail and password):
+            messages.error(request, "Tous les champs sont obligatoires.")
+            return render(request, self.template_name)
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Ce nom d’utilisateur est déjà pris.")
+            return render(request, self.template_name)
+
+        user = User.objects.create_user(username=username, email=mail, password=password)
+        user.save()
+        messages.success(request, "Inscription réussie ! Vous pouvez maintenant vous connecter.")
+        return redirect('monApp:login')
 
 class DisconnectView(LogoutView):
     next_page = 'monApp:home'
 
+#Formulaire de contact
+
+def ContactView(request):
+    titreh1 = "Contact Us"
+
+    if request.method == 'POST':
+        form = ContactUsForm(request.POST)
+        if form.is_valid():
+            send_mail(
+                subject=f'Message from {form.cleaned_data["name"] or "anonyme"} via MonProjet Django',
+                message=form.cleaned_data['message'],
+                from_email=form.cleaned_data['email'],
+                recipient_list=['admin@monprojet.com'],
+            )
+            return redirect('monApp:email-sent')
+    else:
+        form = ContactUsForm()
+
+    return render(request, "monApp/page_home.html", {'titreh1': titreh1, 'form': form, 'page_home': False})
+
+
+class EmailSentView(TemplateView):
+    template_name = "monApp/email_sent.html"

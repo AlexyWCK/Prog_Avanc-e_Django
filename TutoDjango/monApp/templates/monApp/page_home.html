@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block contenu %}
+
 {% if page_home %}
 <div class="text-center my-5">
     <h1>Bienvenue sur Mon App Django</h1>
@@ -17,5 +18,15 @@
 </div>
 {% else %}
 <h1>{{ titreh1 }}</h1>
+
+{% if form %}
+<form method="post" novalidate class="col-8 offset-2 my-4">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success mt-2">Envoyer</button>
+</form>
 {% endif %}
+
+{% endif %}
+
 {% endblock %}
