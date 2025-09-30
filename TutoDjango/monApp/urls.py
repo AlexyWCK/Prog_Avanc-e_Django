@@ -19,6 +19,9 @@ urlpatterns = [
     path('statuts/', views.ListStatutsView.as_view(), name='list_statuts'),
     path('statut/<int:pk>/', views.StatutDetailView.as_view(), name='detail_statut'),
 
+    path('rayons/', views.ListRayonsView.as_view(), name='list_rayons'),
+    path('rayon/<int:pk>/', views.RayonDetailView.as_view(), name='detail_rayon'),
+
     path('login/', views.ConnectView.as_view(), name='login'),
     path('register/', views.RegisterView.as_view(), name='register'),
     path('logout/', views.DisconnectView.as_view(), name='logout'),

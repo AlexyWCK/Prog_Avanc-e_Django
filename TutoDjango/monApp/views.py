@@ -6,7 +6,7 @@ from django.views.generic import TemplateView, ListView, DetailView
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib import messages
-from .models import Produit, Categorie, Statut
+from .models import Produit, Categorie, Statut, Rayon
 from .forms import ContactUsForm
 from django.shortcuts import render, redirect
 from .forms import ProduitForm
@@ -85,6 +85,26 @@ class StatutDetailView(DetailView):
         context['titremenu'] = f"Détails du statut : {self.object.libelle}"
         context['produits'] = self.object.produits.all()
         return context
+
+# --- Rayons ---
+
+class ListRayonsView(ListView):
+    model = Rayon
+    template_name = "monApp/list_rayons.html"
+    context_object_name = "rayons"
+
+class RayonDetailView(DetailView):
+    model = Rayon
+    template_name = "monApp/detail_rayon.html"
+    context_object_name = "rayon"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Produits dans ce rayon
+        context['produits'] = Produit.objects.filter(rayons=self.object)
+        context['titremenu'] = f"Rayon : {self.object.nomRayon}"
+        return context
+
 
 # --- Authentification ---
 

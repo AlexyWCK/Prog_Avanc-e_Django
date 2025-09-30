@@ -1,0 +1,16 @@
+{% extends 'monApp/base.html' %}
+{% block title %}Rayons{% endblock %}
+
+{% block contenu %}
+<h2>Liste des Rayons</h2>
+<ul class="list-group">
+    {% for rayon in rayons %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ rayon.nomRayon }}
+        <a href="{% url 'monApp:detail_rayon' rayon.pk %}" class="btn btn-primary btn-sm">Voir</a>
+    </li>
+    {% empty %}
+    <li class="list-group-item">Aucun rayon disponible</li>
+    {% endfor %}
+</ul>
+{% endblock %}
