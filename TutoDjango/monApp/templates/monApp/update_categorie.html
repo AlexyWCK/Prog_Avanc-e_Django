@@ -1,0 +1,13 @@
+{% extends 'monApp/base.html' %}
+
+{% block title %}Modifier : {{ cat.nomCat }}{% endblock %}
+
+{% block contenu %}
+<h1>Modifier la catégorie</h1>
+
+<form action="" method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-warning mt-2">Confirmer la modification</button>
+</form>
+{% endblock %}

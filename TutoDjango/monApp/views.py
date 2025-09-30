@@ -9,7 +9,7 @@ from django.contrib import messages
 from .models import Produit, Categorie, Statut, Rayon
 from .forms import ContactUsForm
 from django.shortcuts import render, redirect
-from .forms import ProduitForm
+from .forms import ProduitForm, CategorieForm
 from django.views.generic.edit import UpdateView, DeleteView
 from django.urls import reverse_lazy
 
@@ -69,6 +69,34 @@ class CategorieDetailView(DetailView):
         context['titremenu'] = f"Détails de la catégorie : {self.object.nomCat}"
         context['produits'] = self.object.produits.all()
         return context
+    
+# --- Gestion des catégories ---
+
+def CategorieCreate(request):
+    if request.method == 'POST':
+        form = CategorieForm(request.POST)
+        if form.is_valid():
+            cat = form.save()
+            return redirect('monApp:detail_categorie', cat.pk)
+    else:
+        form = CategorieForm()
+    return render(request, "monApp/create_categorie.html", {'form': form})
+
+
+class CategorieUpdateView(UpdateView):
+    model = Categorie
+    form_class = CategorieForm
+    template_name = "monApp/update_categorie.html"
+
+    def form_valid(self, form):
+        cat = form.save()
+        return redirect('monApp:detail_categorie', cat.pk)
+
+class CategorieDeleteView(DeleteView):
+    model = Categorie
+    template_name = "monApp/delete_categorie.html"
+    success_url = reverse_lazy('monApp:list_categories')
+
 
 class ListStatutsView(ListView):
     model = Statut
@@ -100,7 +128,6 @@ class RayonDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Produits dans ce rayon
         context['produits'] = Produit.objects.filter(rayons=self.object)
         context['titremenu'] = f"Rayon : {self.object.nomRayon}"
         return context

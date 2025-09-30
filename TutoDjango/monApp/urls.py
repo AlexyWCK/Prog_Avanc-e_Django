@@ -16,6 +16,11 @@ urlpatterns = [
 
     path('categories/', views.ListCategoriesView.as_view(), name='list_categories'),
     path('categorie/<int:pk>/', views.CategorieDetailView.as_view(), name='detail_categorie'),
+    path('categorie/create/', views.CategorieCreate, name='crt-cat'),
+    path('categorie/<int:pk>/update/', views.CategorieUpdateView.as_view(), name='cat-chng'),
+    path('categorie/<int:pk>/delete/', views.CategorieDeleteView.as_view(), name='dlt-cat'),
+
+
     path('statuts/', views.ListStatutsView.as_view(), name='list_statuts'),
     path('statut/<int:pk>/', views.StatutDetailView.as_view(), name='detail_statut'),
 
