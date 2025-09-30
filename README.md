@@ -103,4 +103,9 @@ Pour ce TD (25/09), j’ai ajouté :
 
 - **Ajout d'un formulaire de création de produits** : Ajout d'un produit via un formulaire intégré avec `create_produit.html` et `ProduitCreate.html`
 
-  
+  Pour ce TD (30/09), j’ai ajouté :
+
+- **Tout ce qui concerne rayons** : Ajout dans la navbar le rayon.
+- **CRUD Produit** : Notamment avec `detail_produit.html`, `update_produit.html` et `delete_produit.html`.
+- **CRUD Catégorie** : Notamment avec `detail_categorie.html`, `update_categorie.html`, `delete_categorie.html`.
+- **Modification form** : J'ai modifié les instructions dans forms pour les lier à la BD.
