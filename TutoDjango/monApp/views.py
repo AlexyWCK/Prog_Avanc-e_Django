@@ -10,7 +10,7 @@ from .models import Produit, Categorie, Statut, Rayon
 from .forms import ContactUsForm
 from django.shortcuts import render, redirect
 from .forms import ProduitForm, CategorieForm
-from django.views.generic.edit import UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
 # --- Pages principales ---
@@ -198,15 +198,15 @@ class EmailSentView(TemplateView):
     template_name = "monApp/email_sent.html"
 
 
-def ProduitCreate(request):
-    if request.method == 'POST':
-        form = ProduitForm(request.POST)
-        if form.is_valid():
-            prdt = form.save()
-            return redirect('monApp:detail_produit', prdt.pk)
-    else:
-        form = ProduitForm()
-    return render(request, "monApp/create_produit.html", {'form': form})
+class ProduitCreateView(CreateView):
+    model = Produit
+    form_class = ProduitForm
+    template_name = "monApp/create_produit.html"
+
+    def form_valid(self, form):
+        prdt = form.save()
+        return redirect('monApp:detail_produit', prdt.pk)
+
 
 class ProduitUpdateView(UpdateView):
     model = Produit

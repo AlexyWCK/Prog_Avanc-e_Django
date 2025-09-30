@@ -1,5 +1,5 @@
 from django import forms
-from .models import Produit, Categorie
+from .models import Produit, Categorie, Statut
 
 class ContactUsForm(forms.Form):
     name = forms.CharField(required=False, label="Nom")
@@ -9,7 +9,10 @@ class ContactUsForm(forms.Form):
 class ProduitForm(forms.ModelForm):
     class Meta:
         model = Produit
-        exclude = ('categorie', 'status')
+        fields = ['intituleProd', 'prixUnitaireProd', 'categorie', 'statut', 'dateFabrication']
+        widgets = {
+            'dateFabrication': forms.DateInput(attrs={'type': 'date'}),
+        }
 
 class CategorieForm(forms.ModelForm):
     class Meta:
