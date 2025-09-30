@@ -1,19 +1,25 @@
 {% extends 'monApp/base.html' %}
+
 {% block title %}Détails : {{ prdt.intituleProd }}{% endblock %}
+
 {% block contenu %}
 <h1>{{ titremenu }}</h1>
+
 <ul class="list-group mb-3">
     <li class="list-group-item"><strong>Référence :</strong> {{ prdt.refProd }}</li>
     <li class="list-group-item"><strong>Intitulé :</strong> {{ prdt.intituleProd }}</li>
     <li class="list-group-item"><strong>Prix :</strong> {{ prdt.prixUnitaireProd }} €</li>
-    <li class="list-group-item"><strong>Date de fabrication :</strong> {{ prdt.dateFabrication|date:"d/m/Y" }}</li>
-    <li class="list-group-item"><strong>Catégorie :</strong> {{ prdt.categorie }}</li>
-    <li class="list-group-item"><strong>Statut :</strong> {{ prdt.statut }}</li>
+    <li class="list-group-item"><strong>Date de fabrication :</strong> {% if prdt.dateFabrication %}{{ prdt.dateFabrication|date:"d/m/Y" }}{% else %}N/A{% endif %}</li>
+    <li class="list-group-item"><strong>Catégorie :</strong> {% if prdt.categorie %}{{ prdt.categorie.nomCat }}{% else %}N/A{% endif %}</li>
+    <li class="list-group-item"><strong>Statut :</strong> {% if prdt.statut %}{{ prdt.statut.libelle }}{% else %}N/A{% endif %}</li>
     <li class="list-group-item"><strong>Rayons :</strong>
         {% for rayon in prdt.rayons.all %}
             <span class="badge bg-secondary">{{ rayon.nomRayon }}</span>
         {% empty %} Aucun {% endfor %}
     </li>
 </ul>
-<a href="{% url 'monApp:list_produits' %}" class="btn btn-dark">Retour à la liste</a>
+
+<a href="{% url 'monApp:list_produits' %}" class="btn mt-2" style="background-color: black; color: white;">Retour à la liste</a>
+<a href="{% url 'monApp:prdt-chng' prdt.pk %}" class="btn mt-2" style="background-color: #613500ff; color: white;">Modifier</a>
+<a href="{% url 'monApp:dlt-prdt' prdt.pk %}" class="btn mt-2" style="background-color: #5e0000ff; color: white;">Supprimer</a>
 {% endblock %}

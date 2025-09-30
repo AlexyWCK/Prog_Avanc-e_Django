@@ -6,10 +6,12 @@ from django.views.generic import TemplateView, ListView, DetailView
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib import messages
-from .models import Produit, Categorie, Statut
+from .models import Produit, Categorie, Statut, Rayon
 from .forms import ContactUsForm
 from django.shortcuts import render, redirect
-from .forms import ProduitForm
+from .forms import ProduitForm, CategorieForm
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 
 # --- Pages principales ---
 
@@ -67,6 +69,34 @@ class CategorieDetailView(DetailView):
         context['titremenu'] = f"Détails de la catégorie : {self.object.nomCat}"
         context['produits'] = self.object.produits.all()
         return context
+    
+# --- Gestion des catégories ---
+
+def CategorieCreate(request):
+    if request.method == 'POST':
+        form = CategorieForm(request.POST)
+        if form.is_valid():
+            cat = form.save()
+            return redirect('monApp:detail_categorie', cat.pk)
+    else:
+        form = CategorieForm()
+    return render(request, "monApp/create_categorie.html", {'form': form})
+
+
+class CategorieUpdateView(UpdateView):
+    model = Categorie
+    form_class = CategorieForm
+    template_name = "monApp/update_categorie.html"
+
+    def form_valid(self, form):
+        cat = form.save()
+        return redirect('monApp:detail_categorie', cat.pk)
+
+class CategorieDeleteView(DeleteView):
+    model = Categorie
+    template_name = "monApp/delete_categorie.html"
+    success_url = reverse_lazy('monApp:list_categories')
+
 
 class ListStatutsView(ListView):
     model = Statut
@@ -83,6 +113,25 @@ class StatutDetailView(DetailView):
         context['titremenu'] = f"Détails du statut : {self.object.libelle}"
         context['produits'] = self.object.produits.all()
         return context
+
+# --- Rayons ---
+
+class ListRayonsView(ListView):
+    model = Rayon
+    template_name = "monApp/list_rayons.html"
+    context_object_name = "rayons"
+
+class RayonDetailView(DetailView):
+    model = Rayon
+    template_name = "monApp/detail_rayon.html"
+    context_object_name = "rayon"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['produits'] = Produit.objects.filter(rayons=self.object)
+        context['titremenu'] = f"Rayon : {self.object.nomRayon}"
+        return context
+
 
 # --- Authentification ---
 
@@ -149,13 +198,26 @@ class EmailSentView(TemplateView):
     template_name = "monApp/email_sent.html"
 
 
-def ProduitCreate(request):
-    if request.method == 'POST':
-        form = ProduitForm(request.POST)
-        if form.is_valid():
-            prdt = form.save()
-            return redirect('monApp:detail_produit', prdt.pk)
-    else:
-        form = ProduitForm()
+class ProduitCreateView(CreateView):
+    model = Produit
+    form_class = ProduitForm
+    template_name = "monApp/create_produit.html"
 
-    return render(request, "monApp/create_produit.html", {'form': form})
+    def form_valid(self, form):
+        prdt = form.save()
+        return redirect('monApp:detail_produit', prdt.pk)
+
+
+class ProduitUpdateView(UpdateView):
+    model = Produit
+    form_class = ProduitForm
+    template_name = "monApp/update_produit.html"
+
+    def form_valid(self, form):
+        prdt = form.save()
+        return redirect('monApp:detail_produit', prdt.pk)
+
+class ProduitDeleteView(DeleteView):
+    model = Produit
+    template_name = "monApp/delete_produit.html"
+    success_url = reverse_lazy('monApp:list_produits')
