@@ -1,0 +1,14 @@
+{% extends 'monApp/base.html' %}
+
+{% block title %}Supprimer : {{ object.intituleProd }}{% endblock %}
+
+{% block contenu %}
+<h1>Supprimer le produit</h1>
+<p>Êtes-vous sûr de vouloir supprimer le produit <strong>{{ object.intituleProd }}</strong> ?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn mt-2" style="background-color: #5e0000ff; color: white;">Confirmer la suppression</button>
+    <a href="{% url 'monApp:detail_produit' object.pk %}" class="btn btn-dark mt-2">Annuler</a>
+</form>
+{% endblock %}

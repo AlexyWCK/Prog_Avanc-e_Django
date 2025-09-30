@@ -10,6 +10,8 @@ from .models import Produit, Categorie, Statut
 from .forms import ContactUsForm
 from django.shortcuts import render, redirect
 from .forms import ProduitForm
+from django.views.generic.edit import UpdateView, DeleteView
+from django.urls import reverse_lazy
 
 # --- Pages principales ---
 
@@ -157,5 +159,18 @@ def ProduitCreate(request):
             return redirect('monApp:detail_produit', prdt.pk)
     else:
         form = ProduitForm()
-
     return render(request, "monApp/create_produit.html", {'form': form})
+
+class ProduitUpdateView(UpdateView):
+    model = Produit
+    form_class = ProduitForm
+    template_name = "monApp/update_produit.html"
+
+    def form_valid(self, form):
+        prdt = form.save()
+        return redirect('monApp:detail_produit', prdt.pk)
+
+class ProduitDeleteView(DeleteView):
+    model = Produit
+    template_name = "monApp/delete_produit.html"
+    success_url = reverse_lazy('monApp:list_produits')
