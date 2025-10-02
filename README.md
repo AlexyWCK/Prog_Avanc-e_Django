@@ -109,3 +109,10 @@ Pour ce TD (25/09), j’ai ajouté :
 - **CRUD Produit** : Notamment avec `detail_produit.html`, `update_produit.html` et `delete_produit.html`.
 - **CRUD Catégorie** : Notamment avec `detail_categorie.html`, `update_categorie.html`, `delete_categorie.html`.
 - **Modification form** : J'ai modifié les instructions dans forms pour les lier à la BD.
+
+  Pour ce TP (02/10), j’ai ajouté :
+  - **Mis de coté Rayon et Statuts** : Fontionnalités déja implémentées pour Prdouit et Catégorie
+  - **Résolution bugs admin** : Bug admin et BD lié aux produits.
+
+# TD N°4 – Dessert
+  - **Amélioration ergonomiques** : Avec les `ProduitListView`,`CategorieListView` et `StatutListView`
