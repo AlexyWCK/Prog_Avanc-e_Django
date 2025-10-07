@@ -10,6 +10,8 @@ from django.contrib import messages
 from .models import Produit, Categorie, Statut, Rayon, Contenir
 from .forms import ProduitForm, CategorieForm, StatutForm, RayonForm, ContenirForm, ContactUsForm
 from decimal import Decimal
+from django.db import transaction
+from django.db.models import F
 
 class HomeView(TemplateView):
     template_name = "monApp/page_home.html"
@@ -219,6 +221,15 @@ class RayonListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['titremenu'] = "Liste des rayons"
+        # compute total stock value per rayon to send to template as ryns_dt
+        ryns = context.get('rayons', Rayon.objects.all())
+        ryns_dt = []
+        from django.db.models import Sum, F as _F
+        for r in ryns:
+            # Sum prixUnitaireProd * Qte for all Contenir in this rayon
+            total = Contenir.objects.filter(rayon=r).aggregate(total_stock=Sum(_F('Qte') * _F('produit__prixUnitaireProd')))['total_stock'] or 0
+            ryns_dt.append({'rayon': r, 'total_stock': total})
+        context['ryns_dt'] = ryns_dt
         return context
 
 @method_decorator(login_required, name='dispatch')
@@ -247,7 +258,7 @@ class RayonDetailView(DetailView):
             qte = c.Qte or 0
             total_prod = prix * qte
             prdts_dt.append({
-                'contenir_id': getattr(c, 'id', None),
+                'contenir_id': c.pk,
                 'produit': c.produit,
                 'prix_unitaire': prix,
                 'qte': qte,
@@ -293,13 +304,24 @@ class ContenirCreateView(CreateView):
 
     def form_valid(self, form):
         pk = self.kwargs.get('pk')
-        cnt = form.save(commit=False)
+        produit = form.cleaned_data.get('produit')
+        qte = int(form.cleaned_data.get('Qte') or 0)
         try:
-            cnt.rayon = Rayon.objects.get(pk=pk)
+            rayon = Rayon.objects.get(pk=pk)
         except Rayon.DoesNotExist:
-            pass
-        cnt.save()
-        return redirect('monApp:dtl-ryn', cnt.rayon.pk)
+            messages.error(self.request, "Rayon introuvable.")
+            return redirect('monApp:lst-ryns')
+
+        # Use a transaction with get_or_create and F() to atomically create or update quantity
+        with transaction.atomic():
+            obj, created = Contenir.objects.select_for_update().get_or_create(produit=produit, rayon=rayon, defaults={'Qte': qte})
+            if not created:
+                # increment atomically
+                Contenir.objects.filter(pk=obj.pk).update(Qte=F('Qte') + qte)
+                messages.success(self.request, f"Quantité mise à jour pour {produit.intituleProd} dans {rayon.nomRayon}.")
+            else:
+                messages.success(self.request, f"Produit {produit.intituleProd} ajouté au rayon {rayon.nomRayon}.")
+        return redirect('monApp:dtl-ryn', rayon.pk)
 
 @method_decorator(login_required, name='dispatch')
 class ContenirUpdateView(UpdateView):
