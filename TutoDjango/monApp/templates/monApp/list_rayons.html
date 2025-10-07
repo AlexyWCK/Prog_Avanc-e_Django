@@ -1,16 +1,37 @@
 {% extends 'monApp/base.html' %}
 {% block title %}Rayons{% endblock %}
-
 {% block contenu %}
-<h2>Liste des Rayons</h2>
-<ul class="list-group">
-    {% for rayon in rayons %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        {{ rayon.nomRayon }}
-        <a href="{% url 'monApp:detail_rayon' rayon.pk %}" class="btn btn-primary btn-sm">Voir</a>
-    </li>
-    {% empty %}
-    <li class="list-group-item">Aucun rayon disponible</li>
-    {% endfor %}
-</ul>
+<h2 class="mb-4">{{ titremenu }}</h2>
+<a href="{% url 'monApp:crt-ryn' %}" class="btn btn-dark mb-3">Créer un nouveau rayon</a>
+<table class="table table-striped table-hover">
+    <thead class="table-primary">
+        <tr>
+            <th>Id</th>
+            <th>Nom rayon</th>
+            <th>Valeur marchande du rayon</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for data in ryns_dt %}
+        <tr>
+            <td><a href="{% url 'monApp:dtl-ryn' data.rayon.idRayon %}">{{ data.rayon.idRayon }}</a></td>
+            <td>{{ data.rayon.nomRayon }}</td>
+            <td>{{ data.total_stock|floatformat:2 }} €</td>
+            <td>
+                <a href="{% url 'monApp:dtl-ryn' data.rayon.idRayon %}" class="btn btn-primary mt-2">Détails</a>
+                <a href="{% url 'monApp:ryn-chng' data.rayon.idRayon %}" class="btn btn-warning mt-2">Modifier</a>
+                <a href="{% url 'monApp:ryn-dlt' data.rayon.idRayon %}" class="btn btn-danger mt-2">Supprimer</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-center">Aucun rayon disponible</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="lead mb-3 ml-0">Rechercher un rayon...</p>
+<form method="GET" action="">
+    <input class="form-control" type="text" name="search" placeholder="Tapez ici votre recherche" value="{{ request.GET.search }}">
+    <button type="submit" class="btn btn-success mt-2">Rechercher</button>
+</form>
 {% endblock %}

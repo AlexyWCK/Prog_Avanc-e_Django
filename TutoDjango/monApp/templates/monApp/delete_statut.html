@@ -1,0 +1,11 @@
+{% extends 'monApp/base.html' %}
+{% block title %}Supprimer : {{ object.libelle }}{% endblock %}
+{% block contenu %}
+<h1>Supprimer le statut</h1>
+<p>Êtes-vous sûr de vouloir supprimer le statut <strong>{{ object.libelle }}</strong> ?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger mt-2">Confirmer la suppression</button>
+    <a href="{% url 'monApp:dtl-stt' object.idStatut %}" class="btn btn-info mt-2">Annuler</a>
+</form>
+{% endblock %}

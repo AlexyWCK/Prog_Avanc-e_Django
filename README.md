@@ -116,3 +116,8 @@ Pour ce TD (25/09), j’ai ajouté :
 
 # TD N°4 – Dessert
   - **Amélioration ergonomiques** : Avec les `ProduitListView`,`CategorieListView` et `StatutListView`
+  - **Ajout CRUD pour toutes les entités** : Ajout des html, des methodes dans `views.py` et des routes dans `utls.py`
+  - **Sécurisation login** : Si je ne suis pas connecté, impossible de modifier ou ajouter donc redirection vers login
+  - **Attribution rayons à produit** : Modification BD pour que le rayon puisse calculer le nombre de produits, prix...
+  - **Barre de recherche** : Ajout d'une barre de recherche pour les produits (fonctionnel)
+  (j'en suis à la fin du TD il me manque 2 ou bugs de pages a resoudre, plus la page d'accueil a modifier)

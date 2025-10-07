@@ -1,0 +1,11 @@
+{% extends 'monApp/base.html' %}
+{% block title %}Modifier : {{ object.nomRayon }}{% endblock %}
+{% block contenu %}
+<h1>Modifier le rayon</h1>
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-warning mt-2">Confirmer la modification</button>
+    <a href="{% url 'monApp:lst-ryns' %}" class="btn btn-info mt-2">Retour</a>
+</form>
+{% endblock %}
