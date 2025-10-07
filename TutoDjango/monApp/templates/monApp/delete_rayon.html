@@ -1,0 +1,11 @@
+{% extends 'monApp/base.html' %}
+{% block title %}Supprimer : {{ object.nomRayon }}{% endblock %}
+{% block contenu %}
+<h1>Supprimer le rayon</h1>
+<p>Êtes-vous sûr de vouloir supprimer le rayon <strong>{{ object.nomRayon }}</strong> ?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger mt-2">Confirmer la suppression</button>
+    <a href="{% url 'monApp:dtl-ryn' object.idRayon %}" class="btn btn-info mt-2">Annuler</a>
+</form>
+{% endblock %}

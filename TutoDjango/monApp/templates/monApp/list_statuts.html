@@ -1,15 +1,37 @@
 {% extends 'monApp/base.html' %}
 {% block title %}Statuts{% endblock %}
 {% block contenu %}
-<h2>Liste des Statuts</h2>
-<ul class="list-group">
-    {% for stt in statuts %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            {{ stt.libelle }}
-            <a href="{% url 'monApp:detail_statut' stt.pk %}" class="btn btn-primary btn-sm">Voir</a>
-        </li>
-    {% empty %}
-        <li class="list-group-item text-center">Aucun statut disponible</li>
-    {% endfor %}
-</ul>
+<h2 class="mb-4">{{ titremenu }}</h2>
+<a href="{% url 'monApp:crt-stt' %}" class="btn btn-dark mb-3">Créer un nouveau statut</a>
+<table class="table table-striped table-hover">
+    <thead class="table-primary">
+        <tr>
+            <th>Id</th>
+            <th>Libellé</th>
+            <th>Nombre de Produits</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stt in stts %}
+        <tr>
+            <td><a href="{% url 'monApp:dtl-stt' stt.idStatut %}">{{ stt.idStatut }}</a></td>
+            <td>{{ stt.libelle }}</td>
+            <td>{{ stt.nb_produits }}</td>
+            <td>
+                <a href="{% url 'monApp:dtl-stt' stt.idStatut %}" class="btn btn-primary mt-2">Détails</a>
+                <a href="{% url 'monApp:stt-chng' stt.idStatut %}" class="btn btn-warning mt-2">Modifier</a>
+                <a href="{% url 'monApp:stt-dlt' stt.idStatut %}" class="btn btn-danger mt-2">Supprimer</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-center">Aucun statut disponible</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="lead mb-3 ml-0">Rechercher un statut...</p>
+<form method="GET" action="">
+    <input class="form-control" type="text" name="search" placeholder="Tapez ici votre recherche" value="{{ request.GET.search }}">
+    <button type="submit" class="btn btn-success mt-2">Rechercher</button>
+</form>
 {% endblock %}

@@ -1,25 +1,30 @@
 {% extends 'monApp/base.html' %}
-
 {% block title %}Détails : {{ prdt.intituleProd }}{% endblock %}
-
 {% block contenu %}
 <h1>{{ titremenu }}</h1>
-
-<ul class="list-group mb-3">
-    <li class="list-group-item"><strong>Référence :</strong> {{ prdt.refProd }}</li>
-    <li class="list-group-item"><strong>Intitulé :</strong> {{ prdt.intituleProd }}</li>
-    <li class="list-group-item"><strong>Prix :</strong> {{ prdt.prixUnitaireProd }} €</li>
-    <li class="list-group-item"><strong>Date de fabrication :</strong> {% if prdt.dateFabrication %}{{ prdt.dateFabrication|date:"d/m/Y" }}{% else %}N/A{% endif %}</li>
-    <li class="list-group-item"><strong>Catégorie :</strong> {% if prdt.categorie %}{{ prdt.categorie.nomCat }}{% else %}N/A{% endif %}</li>
-    <li class="list-group-item"><strong>Statut :</strong> {% if prdt.statut %}{{ prdt.statut.libelle }}{% else %}N/A{% endif %}</li>
-    <li class="list-group-item"><strong>Rayons :</strong>
-        {% for rayon in prdt.rayons.all %}
-            <span class="badge bg-secondary">{{ rayon.nomRayon }}</span>
-        {% empty %} Aucun {% endfor %}
-    </li>
-</ul>
-
-<a href="{% url 'monApp:list_produits' %}" class="btn mt-2" style="background-color: black; color: white;">Retour à la liste</a>
-<a href="{% url 'monApp:prdt-chng' prdt.pk %}" class="btn mt-2" style="background-color: #613500ff; color: white;">Modifier</a>
-<a href="{% url 'monApp:dlt-prdt' prdt.pk %}" class="btn mt-2" style="background-color: #5e0000ff; color: white;">Supprimer</a>
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>{{ prdt.intituleProd }}</h4>
+    </div>
+    <div class="card-body">
+        <ul class="list-unstyled">
+            <li><strong>Référence :</strong> {{ prdt.refProd }}</li>
+            <li><strong>Intitulé :</strong> {{ prdt.intituleProd }}</li>
+            <li><strong>Prix :</strong> {{ prdt.prixUnitaireProd|floatformat:2 }} €</li>
+            <li><strong>Date de fabrication :</strong> {% if prdt.dateFabrication %}{{ prdt.dateFabrication|date:"d/m/Y" }}{% else %}N/A{% endif %}</li>
+            <li><strong>Catégorie :</strong> {% if prdt.categorie %}{{ prdt.categorie.nomCat }}{% else %}N/A{% endif %}</li>
+            <li><strong>Statut :</strong> {% if prdt.statut %}{{ prdt.statut.libelle }}{% else %}N/A{% endif %}</li>
+            <li><strong>Rayons :</strong>
+                {% for contenir in prdt.contenir_produit.all %}
+                <span class="badge bg-secondary">{{ contenir.rayon.nomRayon }} (Quantité: {{ contenir.Qte }})</span>
+                {% empty %} Aucun {% endfor %}
+            </li>
+        </ul>
+        <div class="card-footer text-center">
+            <a href="{% url 'monApp:prdt-chng' prdt.refProd %}" class="btn btn-warning mt-2">Modifier</a>
+            <a href="{% url 'monApp:dlt-prdt' prdt.refProd %}" class="btn btn-danger mt-2">Supprimer</a>
+            <a href="{% url 'monApp:list_produits' %}" class="btn btn-info mt-2">Retour</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

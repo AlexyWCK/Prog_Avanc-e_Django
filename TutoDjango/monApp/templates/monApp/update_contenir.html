@@ -1,0 +1,11 @@
+{% extends 'monApp/base.html' %}
+{% block title %}Modifier la quantité dans le rayon{% endblock %}
+{% block contenu %}
+<h1>Modifier la quantité dans le rayon</h1>
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success mt-2">Valider</button>
+    <a href="{% url 'monApp:dtl-ryn' object.rayon.idRayon %}" class="btn btn-info mt-2">Retour</a>
+</form>
+{% endblock %}

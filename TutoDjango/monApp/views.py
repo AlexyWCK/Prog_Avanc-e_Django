@@ -1,143 +1,34 @@
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, ListView, DetailView
-from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib import messages
-from .models import Produit, Categorie, Statut, Rayon
-from .forms import ContactUsForm
-from django.shortcuts import render, redirect
-from .forms import ProduitForm, CategorieForm
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
-
-# --- Pages principales ---
+from .models import Produit, Categorie, Statut, Rayon, Contenir
+from .forms import ProduitForm, CategorieForm, StatutForm, RayonForm, ContenirForm, ContactUsForm
+from decimal import Decimal
 
 class HomeView(TemplateView):
     template_name = "monApp/page_home.html"
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['param'] = self.kwargs.get('param', None)
-        context['titreh1'] = "Hello DJANGO"
-        context['titretitre'] = "Accueil"
-        context['page_home'] = True
+        param = self.kwargs.get('param', '')
+        context['titremenu'] = "Accueil"
+        context['message'] = f"Vous avez cherché : {param}" if param else "Bienvenue sur la page d'accueil"
         return context
 
 class AboutView(TemplateView):
-    template_name = "monApp/page_home.html"
-
+    template_name = "monApp/about.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['titreh1'] = "About Us"
-        context['titretitre'] = "About"
-        context['page_home'] = False
-        context['param'] = None
+        context['titremenu'] = "À propos"
         return context
-
-# --- Liste et détails des objets ---
-
-class ListProduitsView(ListView):
-    model = Produit
-    template_name = "monApp/list_produits.html"
-    context_object_name = "prdts"
-
-class ProduitDetailView(DetailView):
-    model = Produit
-    template_name = "monApp/detail_produit.html"
-    context_object_name = "prdt"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titremenu'] = f"Détails du produit : {self.object.intituleProd}"
-        return context
-
-class ListCategoriesView(ListView):
-    model = Categorie
-    template_name = "monApp/list_categories.html"
-    context_object_name = "categories"
-
-class CategorieDetailView(DetailView):
-    model = Categorie
-    template_name = "monApp/detail_categorie.html"
-    context_object_name = "cat"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titremenu'] = f"Détails de la catégorie : {self.object.nomCat}"
-        context['produits'] = self.object.produits.all()
-        return context
-    
-# --- Gestion des catégories ---
-
-def CategorieCreate(request):
-    if request.method == 'POST':
-        form = CategorieForm(request.POST)
-        if form.is_valid():
-            cat = form.save()
-            return redirect('monApp:detail_categorie', cat.pk)
-    else:
-        form = CategorieForm()
-    return render(request, "monApp/create_categorie.html", {'form': form})
-
-
-class CategorieUpdateView(UpdateView):
-    model = Categorie
-    form_class = CategorieForm
-    template_name = "monApp/update_categorie.html"
-
-    def form_valid(self, form):
-        cat = form.save()
-        return redirect('monApp:detail_categorie', cat.pk)
-
-class CategorieDeleteView(DeleteView):
-    model = Categorie
-    template_name = "monApp/delete_categorie.html"
-    success_url = reverse_lazy('monApp:list_categories')
-
-
-class ListStatutsView(ListView):
-    model = Statut
-    template_name = "monApp/list_statuts.html"
-    context_object_name = "statuts"
-
-class StatutDetailView(DetailView):
-    model = Statut
-    template_name = "monApp/detail_statut.html"
-    context_object_name = "stt"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titremenu'] = f"Détails du statut : {self.object.libelle}"
-        context['produits'] = self.object.produits.all()
-        return context
-
-# --- Rayons ---
-
-class ListRayonsView(ListView):
-    model = Rayon
-    template_name = "monApp/list_rayons.html"
-    context_object_name = "rayons"
-
-class RayonDetailView(DetailView):
-    model = Rayon
-    template_name = "monApp/detail_rayon.html"
-    context_object_name = "rayon"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['produits'] = Produit.objects.filter(rayons=self.object)
-        context['titremenu'] = f"Rayon : {self.object.nomRayon}"
-        return context
-
-
-# --- Authentification ---
 
 class ConnectView(LoginView):
     template_name = 'monApp/page_login.html'
-
     def post(self, request, **kwargs):
         lgn = request.POST.get('username')
         pswrd = request.POST.get('password')
@@ -149,75 +40,293 @@ class ConnectView(LoginView):
             messages.error(request, "Nom d’utilisateur ou mot de passe incorrect.")
             return render(request, self.template_name)
 
-class RegisterView(TemplateView):
+class RegisterView(CreateView):
     template_name = 'monApp/page_register.html'
-
-    def post(self, request, **kwargs):
-        username = request.POST.get('username', '').strip()
-        mail = request.POST.get('mail', '').strip()
-        password = request.POST.get('password', '').strip()
-
-        if not (username and mail and password):
-            messages.error(request, "Tous les champs sont obligatoires.")
-            return render(request, self.template_name)
-
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Ce nom d’utilisateur est déjà pris.")
-            return render(request, self.template_name)
-
-        user = User.objects.create_user(username=username, email=mail, password=password)
-        user.save()
-        messages.success(request, "Inscription réussie ! Vous pouvez maintenant vous connecter.")
-        return redirect('monApp:login')
+    form_class = UserCreationForm
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('monApp:home')
 
 class DisconnectView(LogoutView):
     next_page = 'monApp:home'
 
-#Formulaire de contact
+class ProduitListView(ListView):
+    model = Produit
+    template_name = "monApp/list_produits.html"
+    # Template expects `prdts` and uses 'search' as the query param
+    context_object_name = "prdts"
+    def get_queryset(self):
+        query = self.request.GET.get('search')
+        if query:
+            return Produit.objects.filter(intituleProd__icontains=query)
+        return Produit.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = "Liste des produits"
+        return context
 
-def ContactView(request):
-    titreh1 = "Contact Us"
-
-    if request.method == 'POST':
-        form = ContactUsForm(request.POST)
-        if form.is_valid():
-            send_mail(
-                subject=f'Message from {form.cleaned_data["name"] or "anonyme"} via MonProjet Django',
-                message=form.cleaned_data['message'],
-                from_email=form.cleaned_data['email'],
-                recipient_list=['admin@monprojet.com'],
-            )
-            return redirect('monApp:email-sent')
-    else:
-        form = ContactUsForm()
-
-    return render(request, "monApp/page_home.html", {'titreh1': titreh1, 'form': form, 'page_home': False})
-
-
-class EmailSentView(TemplateView):
-    template_name = "monApp/email_sent.html"
-
-
+@method_decorator(login_required, name='dispatch')
 class ProduitCreateView(CreateView):
     model = Produit
     form_class = ProduitForm
     template_name = "monApp/create_produit.html"
-
     def form_valid(self, form):
         prdt = form.save()
         return redirect('monApp:detail_produit', prdt.pk)
 
+class ProduitDetailView(DetailView):
+    model = Produit
+    template_name = "monApp/detail_produit.html"
+    context_object_name = "prdt"
+    def get_queryset(self):
+        return Produit.objects.select_related('categorie', 'statut').prefetch_related('contenir_produit__rayon')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = f"Détails du produit : {self.object.intituleProd}"
+        return context
 
+@method_decorator(login_required, name='dispatch')
 class ProduitUpdateView(UpdateView):
     model = Produit
     form_class = ProduitForm
     template_name = "monApp/update_produit.html"
-
     def form_valid(self, form):
         prdt = form.save()
         return redirect('monApp:detail_produit', prdt.pk)
 
+@method_decorator(login_required, name='dispatch')
 class ProduitDeleteView(DeleteView):
     model = Produit
     template_name = "monApp/delete_produit.html"
-    success_url = reverse_lazy('monApp:list_produits')
+    def get_success_url(self):
+        return reverse('monApp:list_produits')
+
+class CategorieListView(ListView):
+    model = Categorie
+    template_name = "monApp/list_categories.html"
+    context_object_name = "categories"
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Categorie.objects.filter(nomCat__icontains=query)
+        return Categorie.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = "Liste des catégories"
+        return context
+
+@method_decorator(login_required, name='dispatch')
+class CategorieCreateView(CreateView):
+    model = Categorie
+    form_class = CategorieForm
+    template_name = "monApp/create_categorie.html"
+    def form_valid(self, form):
+        cat = form.save()
+        return redirect('monApp:dtl-ctgr', cat.pk)
+
+class CategorieDetailView(DetailView):
+    model = Categorie
+    template_name = "monApp/detail_categorie.html"
+    # Template expects `ctgr` as the object name
+    context_object_name = "ctgr"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = f"Détails de la catégorie : {self.object.nomCat}"
+        # add the products for this category
+        prdts = Produit.objects.filter(categorie=self.object)
+        context['prdts'] = prdts
+        # provide nb_produits attribute for compatibility with template
+        try:
+            context['ctgr'].nb_produits = prdts.count()
+        except Exception:
+            pass
+        return context
+
+@method_decorator(login_required, name='dispatch')
+class CategorieUpdateView(UpdateView):
+    model = Categorie
+    form_class = CategorieForm
+    template_name = "monApp/update_categorie.html"
+    def form_valid(self, form):
+        cat = form.save()
+        return redirect('monApp:dtl-ctgr', cat.pk)
+
+@method_decorator(login_required, name='dispatch')
+class CategorieDeleteView(DeleteView):
+    model = Categorie
+    template_name = "monApp/delete_categorie.html"
+    def get_success_url(self):
+        return reverse('monApp:lst-ctgrs')
+
+class StatutListView(ListView):
+    model = Statut
+    template_name = "monApp/list_statuts.html"
+    context_object_name = "statuts"
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Statut.objects.filter(libelle__icontains=query)
+        return Statut.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = "Liste des statuts"
+        return context
+
+@method_decorator(login_required, name='dispatch')
+class StatutCreateView(CreateView):
+    model = Statut
+    form_class = StatutForm
+    template_name = "monApp/create_statut.html"
+    def form_valid(self, form):
+        stt = form.save()
+        return redirect('monApp:dtl-stt', stt.pk)
+
+class StatutDetailView(DetailView):
+    model = Statut
+    template_name = "monApp/detail_statut.html"
+    context_object_name = "stt"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = f"Détails du statut : {self.object.libelle}"
+        return context
+
+@method_decorator(login_required, name='dispatch')
+class StatutUpdateView(UpdateView):
+    model = Statut
+    form_class = StatutForm
+    template_name = "monApp/update_statut.html"
+    def form_valid(self, form):
+        stt = form.save()
+        return redirect('monApp:dtl-stt', stt.pk)
+
+@method_decorator(login_required, name='dispatch')
+class StatutDeleteView(DeleteView):
+    model = Statut
+    template_name = "monApp/delete_statut.html"
+    def get_success_url(self):
+        return reverse('monApp:lst-stts')
+
+class RayonListView(ListView):
+    model = Rayon
+    template_name = "monApp/list_rayons.html"
+    context_object_name = "rayons"
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Rayon.objects.filter(nomRayon__icontains=query)
+        return Rayon.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = "Liste des rayons"
+        return context
+
+@method_decorator(login_required, name='dispatch')
+class RayonCreateView(CreateView):
+    model = Rayon
+    form_class = RayonForm
+    template_name = "monApp/create_rayon.html"
+    def form_valid(self, form):
+        ryn = form.save()
+        return redirect('monApp:dtl-ryn', ryn.pk)
+
+class RayonDetailView(DetailView):
+    model = Rayon
+    template_name = "monApp/detail_rayon.html"
+    context_object_name = "ryn"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = f"Détails du rayon : {self.object.nomRayon}"
+        # Prepare product details in this rayon
+        contenirs = Contenir.objects.filter(rayon=self.object).select_related('produit')
+        prdts_dt = []
+        total_nb = 0
+        total_rayon = Decimal('0.00')
+        for c in contenirs:
+            prix = c.produit.prixUnitaireProd or Decimal('0.00')
+            qte = c.Qte or 0
+            total_prod = prix * qte
+            prdts_dt.append({
+                'contenir_id': getattr(c, 'id', None),
+                'produit': c.produit,
+                'prix_unitaire': prix,
+                'qte': qte,
+                'total_produit': total_prod,
+            })
+            total_nb += qte
+            total_rayon += total_prod
+        context['prdts_dt'] = prdts_dt
+        context['total_nb_produit'] = total_nb
+        context['total_rayon'] = total_rayon
+        return context
+
+@method_decorator(login_required, name='dispatch')
+class RayonUpdateView(UpdateView):
+    model = Rayon
+    form_class = RayonForm
+    template_name = "monApp/update_rayon.html"
+    def form_valid(self, form):
+        ryn = form.save()
+        return redirect('monApp:dtl-ryn', ryn.pk)
+
+@method_decorator(login_required, name='dispatch')
+class RayonDeleteView(DeleteView):
+    model = Rayon
+    template_name = "monApp/delete_rayon.html"
+    def get_success_url(self):
+        return reverse('monApp:lst-ryns')
+
+@method_decorator(login_required, name='dispatch')
+class ContenirCreateView(CreateView):
+    model = Contenir
+    form_class = ContenirForm
+    template_name = "monApp/create_contenir.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        try:
+            rayon = Rayon.objects.get(pk=pk)
+        except Rayon.DoesNotExist:
+            rayon = None
+        context['rayon'] = rayon
+        return context
+
+    def form_valid(self, form):
+        pk = self.kwargs.get('pk')
+        cnt = form.save(commit=False)
+        try:
+            cnt.rayon = Rayon.objects.get(pk=pk)
+        except Rayon.DoesNotExist:
+            pass
+        cnt.save()
+        return redirect('monApp:dtl-ryn', cnt.rayon.pk)
+
+@method_decorator(login_required, name='dispatch')
+class ContenirUpdateView(UpdateView):
+    model = Contenir
+    form_class = ContenirForm
+    template_name = "monApp/update_contenir.html"
+    def form_valid(self, form):
+        cnt = form.save()
+        return redirect('monApp:dtl-ryn', cnt.rayon.pk)
+
+@method_decorator(login_required, name='dispatch')
+class ContenirDeleteView(DeleteView):
+    model = Contenir
+    template_name = "monApp/delete_contenir.html"
+    def get_success_url(self):
+        return reverse('monApp:dtl-ryn', kwargs={'pk': self.object.rayon.pk})
+
+class ContactView(FormView):
+    template_name = 'monApp/contact.html'
+    form_class = ContactUsForm
+    def form_valid(self, form):
+        form.send_email()
+        return redirect('monApp:email-sent')
+
+class EmailSentView(TemplateView):
+    template_name = 'monApp/email_sent.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titremenu'] = "Message envoyé"
+        return context

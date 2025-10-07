@@ -1,0 +1,11 @@
+{% extends 'monApp/base.html' %}
+{% block title %}Créer un rayon{% endblock %}
+{% block contenu %}
+<h1>Créer un nouveau rayon</h1>
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-dark mt-2">Créer</button>
+    <a href="{% url 'monApp:lst-ryns' %}" class="btn btn-info mt-2">Retour</a>
+</form>
+{% endblock %}

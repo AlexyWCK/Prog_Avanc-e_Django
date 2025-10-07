@@ -1,6 +1,5 @@
 {% load static %}
 {% load django_bootstrap5 %}
-
 <!doctype html>
 <html lang="fr">
 <head>
@@ -10,68 +9,62 @@
     <link rel="stylesheet" href="{% static 'base.css' %}">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-    <div class="container">
-        <a class="navbar-brand" href="{% url 'monApp:home' %}">Mon App Django</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'monApp:home' %}">Accueil</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="produitsDropdown" role="button" data-bs-toggle="dropdown">
-                        Magasin
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="produitsDropdown">
-                        <li><a class="dropdown-item" href="{% url 'monApp:list_produits' %}">Produits</a></li>
-                        <li><a class="dropdown-item" href="{% url 'monApp:list_categories' %}">Catégories</a></li>
-                        <li><a class="dropdown-item" href="{% url 'monApp:list_statuts' %}">Statuts</a></li>
-                        <li><a class="dropdown-item" href="{% url 'monApp:list_rayons' %}">Rayons</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'monApp:about' %}">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'monApp:contact' %}">Contact</a>
-                </li>
-
-                {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <form method="post" action="{% url 'monApp:logout' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="nav-link btn btn-link"
-                                style="display:inline; padding:0; border:none; background:none; margin-top:8px;">
-                            Déconnexion
-                        </button>
-                    </form>
-                </li>
-            {% else %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'monApp:login' %}">Connexion</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'monApp:register' %}">Inscription</a></li>
-            {% endif %}
-
-                <li class="nav-item ms-3">
-                    <a href="/admin/" class="btn btn-light text-dark fw-bold">Admin</a>
-                </li>
-            </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'monApp:home' %}">Mon App Django</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'monApp:home' %}">Accueil</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="produitsDropdown" role="button" data-bs-toggle="dropdown">
+                            Magasin
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="produitsDropdown">
+                            <li><a class="dropdown-item" href="{% url 'monApp:list_produits' %}">Produits</a></li>
+                            <li><a class="dropdown-item" href="{% url 'monApp:lst-ctgrs' %}">Catégories</a></li>
+                            <li><a class="dropdown-item" href="{% url 'monApp:lst-stts' %}">Statuts</a></li>
+                            <li><a class="dropdown-item" href="{% url 'monApp:lst-ryns' %}">Rayons</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'monApp:about' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'monApp:contact' %}">Contact</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'monApp:logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link" style="display:inline; padding:0; border:none; background:none; margin-top:8px;">
+                                Déconnexion
+                            </button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'monApp:login' %}">Connexion</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'monApp:register' %}">Inscription</a></li>
+                    {% endif %}
+                    <li class="nav-item ms-3">
+                        <a href="/admin/" class="btn btn-light text-dark fw-bold">Admin</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
-
-<main class="container">
-    {% block contenu %}{% endblock %}
-</main>
-
-<footer class="footer mt-4 py-3 bg-light">
-    <div class="container text-center">
-        <p class="mb-0">&copy; {% now "Y" %} Mon App Django - Alexy Wiciak</p>
-    </div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </nav>
+    <main class="container">
+        {% block contenu %}{% endblock %}
+    </main>
+    <footer class="footer mt-4 py-3 bg-light">
+        <div class="container text-center">
+            <p class="mb-0">&copy; {% now "Y" %} Mon App Django - Alexy Wiciak</p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

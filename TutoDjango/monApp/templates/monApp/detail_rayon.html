@@ -1,20 +1,54 @@
 {% extends 'monApp/base.html' %}
-{% block title %}Détails du rayon : {{ rayon.nomRayon }}{% endblock %}
-
+{% block title %}Détails du rayon : {{ ryn.nomRayon }}{% endblock %}
 {% block contenu %}
-<h1>{{ titremenu }}</h1>
-
-<h3>Produits dans ce rayon :</h3>
-<ul class="list-group mb-3">
-    {% for produit in produits %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        {{ produit.intituleProd }}
-        <a href="{% url 'monApp:detail_produit' produit.pk %}" class="btn btn-dark btn-sm">Voir</a>
-    </li>
-    {% empty %}
-    <li class="list-group-item">Aucun produit dans ce rayon</li>
-    {% endfor %}
-</ul>
-
-<a href="{% url 'monApp:list_rayons' %}" class="btn btn-dark">Retour à la liste des rayons</a>
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>{{ titremenu }}</h4>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ ryn.nomRayon }}</h5>
+        <ul class="list-unstyled">
+            <li><strong>Référence :</strong> {{ ryn.idRayon }}</li>
+            <li><strong>Nom rayon :</strong> {{ ryn.nomRayon }}</li>
+        </ul>
+        <div class="card-footer text-center">
+            <a href="{% url 'monApp:cntnr-crt' ryn.idRayon %}" class="btn btn-success mt-2">Ajouter un produit</a>
+            <a href="{% url 'monApp:ryn-chng' ryn.idRayon %}" class="btn btn-warning mt-2">Modifier</a>
+            <a href="{% url 'monApp:ryn-dlt' ryn.idRayon %}" class="btn btn-danger mt-2">Supprimer</a>
+            <a href="{% url 'monApp:lst-ryns' %}" class="btn btn-info mt-2">Retour</a>
+        </div>
+    </div>
+</div>
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>Ce rayon contient <strong>{{ total_nb_produit }}</strong> produit(s) pour un total de <strong>{{ total_rayon|floatformat:2 }} €</strong></h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% if prdts_dt %}
+            {% for data in prdts_dt %}
+            <div class="col-sm-3">
+                <div class="card mb-2 text-center">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title">{{ data.produit.intituleProd }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li>Prix unitaire : {{ data.prix_unitaire|floatformat:2 }} €</li>
+                            <li>Quantité : {{ data.qte }}</li>
+                            <li>Total : {{ data.total_produit|floatformat:2 }} €</li>
+                        </ul>
+                        <a href="{% url 'monApp:detail_produit' data.produit.refProd %}" class="btn btn-primary mt-2">Détails</a>
+                        <a href="{% url 'monApp:cntnr-chng' data.contenir_id %}" class="btn btn-warning mt-2">Modifier quantité</a>
+                        <a href="{% url 'monApp:cntnr-dlt' data.contenir_id %}" class="btn btn-danger mt-2">Supprimer</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="text-muted">Aucun produit trouvé pour ce rayon.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}
