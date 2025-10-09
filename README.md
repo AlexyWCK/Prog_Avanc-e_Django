@@ -119,11 +119,11 @@ Pour ce TD (25/09), j’ai ajouté :
   - **Ajout CRUD pour toutes les entités** : Ajout des html, des methodes dans `views.py` et des routes dans `utls.py`.
   - **Sécurisation login** : Si je ne suis pas connecté, impossible de modifier ou ajouter donc redirection vers login.
   - **Attribution rayons à produit** : Modification BD pour que le rayon puisse calculer le nombre de produits, prix...
+  - **Barre de recherche** : Ajout d'une barre de recherche pour les produits (fonctionnelle).
+  - **Sessions & Permissions** : Ajout des sessiosn et permissions pour simplifier la navigation en fonction du statut.
 
   Pour ce TP (09/10), j’ai ajouté :
 
-  - **Barre de recherche** : Ajout d'une barre de recherche pour les produits (fonctionnelle).
-  - **Sessions & Permissions** : Ajout des sessiosn et permissions pour simplifier la navigation en fonction du statut.
   - **Sécurisation login** : Ajout de restrictions à l'inscription.
   - **Gestion doublons** : Impossible de créer deux fois la même entité (nom).
   - **Résolution des bugs de navigation** : Surtout entre `contact`, `about` et l'affichage des produits.
