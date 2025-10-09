@@ -4,7 +4,14 @@
 <h1>Créer un nouveau statut</h1>
 <form method="post" novalidate>
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form.non_field_errors }}
+    <div class="mb-3">
+        {{ form.libelle.label_tag }}
+        {{ form.libelle }}
+        {% if form.libelle.errors %}
+            <div class="text-danger small">{{ form.libelle.errors }}</div>
+        {% endif %}
+    </div>
     <button type="submit" class="btn btn-dark mt-2">Créer</button>
     <a href="{% url 'monApp:lst-stts' %}" class="btn btn-info mt-2">Retour</a>
 </form>

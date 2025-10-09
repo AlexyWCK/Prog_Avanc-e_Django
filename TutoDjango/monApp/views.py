@@ -18,7 +18,12 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         param = self.kwargs.get('param', '')
+        # Provide template variables expected by page_home.html
         context['titremenu'] = "Accueil"
+        context['titretitre'] = "Mon App Django - Accueil"
+        context['page_home'] = True
+        context['param'] = param
+        context['titreh1'] = "Bienvenue"
         context['message'] = f"Vous avez cherché : {param}" if param else "Bienvenue sur la page d'accueil"
         return context
 
@@ -47,6 +52,11 @@ class RegisterView(CreateView):
     form_class = UserCreationForm
     def form_valid(self, form):
         user = form.save()
+        # save optional email field if provided from the template extra input 'mail'
+        mail = self.request.POST.get('mail')
+        if mail:
+            user.email = mail
+            user.save()
         login(self.request, user)
         return redirect('monApp:home')
 
@@ -104,15 +114,20 @@ class ProduitDeleteView(DeleteView):
     def get_success_url(self):
         return reverse('monApp:list_produits')
 
+from django.db.models import Count
+
+
 class CategorieListView(ListView):
     model = Categorie
     template_name = "monApp/list_categories.html"
-    context_object_name = "categories"
+    # template expects 'ctgrs'
+    context_object_name = "ctgrs"
     def get_queryset(self):
         query = self.request.GET.get('q')
+        qs = Categorie.objects.annotate(nb_produits=Count('produits_categorie'))
         if query:
-            return Categorie.objects.filter(nomCat__icontains=query)
-        return Categorie.objects.all()
+            return qs.filter(nomCat__icontains=query)
+        return qs
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['titremenu'] = "Liste des catégories"
@@ -164,12 +179,14 @@ class CategorieDeleteView(DeleteView):
 class StatutListView(ListView):
     model = Statut
     template_name = "monApp/list_statuts.html"
-    context_object_name = "statuts"
+    # template expects 'stts'
+    context_object_name = "stts"
     def get_queryset(self):
         query = self.request.GET.get('q')
+        qs = Statut.objects.annotate(nb_produits=Count('produits_statut'))
         if query:
-            return Statut.objects.filter(libelle__icontains=query)
-        return Statut.objects.all()
+            return qs.filter(libelle__icontains=query)
+        return qs
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['titremenu'] = "Liste des statuts"

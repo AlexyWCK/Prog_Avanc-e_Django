@@ -38,10 +38,28 @@ class CategorieForm(forms.ModelForm):
         model = Categorie
         fields = ['nomCat']
 
+    def clean_nomCat(self):
+        name = self.cleaned_data.get('nomCat')
+        qs = Categorie.objects.filter(nomCat__iexact=name)
+        if self.instance and self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise forms.ValidationError("Cette catégorie existe déjà.")
+        return name
+
 class StatutForm(forms.ModelForm):
     class Meta:
         model = Statut
         fields = ['libelle']
+
+    def clean_libelle(self):
+        name = self.cleaned_data.get('libelle')
+        qs = Statut.objects.filter(libelle__iexact=name)
+        if self.instance and self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise forms.ValidationError("Ce statut existe déjà.")
+        return name
 
 class RayonForm(forms.ModelForm):
     class Meta:
