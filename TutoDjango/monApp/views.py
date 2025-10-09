@@ -109,15 +109,20 @@ class ProduitDeleteView(DeleteView):
     def get_success_url(self):
         return reverse('monApp:list_produits')
 
+from django.db.models import Count
+
+
 class CategorieListView(ListView):
     model = Categorie
     template_name = "monApp/list_categories.html"
-    context_object_name = "categories"
+    # template expects 'ctgrs'
+    context_object_name = "ctgrs"
     def get_queryset(self):
         query = self.request.GET.get('q')
+        qs = Categorie.objects.annotate(nb_produits=Count('produits_categorie'))
         if query:
-            return Categorie.objects.filter(nomCat__icontains=query)
-        return Categorie.objects.all()
+            return qs.filter(nomCat__icontains=query)
+        return qs
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['titremenu'] = "Liste des catégories"

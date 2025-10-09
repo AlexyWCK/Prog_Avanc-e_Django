@@ -2,7 +2,7 @@ from django.db import models
 
 class Categorie(models.Model):
     idCat = models.AutoField(primary_key=True)
-    nomCat = models.CharField(max_length=100)
+    nomCat = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.nomCat
