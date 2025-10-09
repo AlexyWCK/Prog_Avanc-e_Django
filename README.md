@@ -123,8 +123,16 @@ Pour ce TD (25/09), j’ai ajouté :
   Pour ce TP (09/10), j’ai ajouté :
 
   - **Barre de recherche** : Ajout d'une barre de recherche pour les produits (fonctionnelle).
+  - **Sessions & Permissions** : Ajout des sessiosn et permissions pour simplifier la navigation en fonction du statut.
   - **Sécurisation login** : Ajout de restrictions à l'inscription.
   - **Gestion doublons** : Impossible de créer deux fois la même entité (nom).
   - **Résolution des bugs de navigation** : Surtout entre `contact`, `about` et l'affichage des produits.
   - **CSS** : Modification du style général des pages pour mettre en forme les fonctionnalités.
+  - **MCD** : Ajout du MCD correspondant à mon application
   
+# TP N°4 – Dessert
+
+  - **Test Catégorie** : Ajout des tests pour les catégories avec la classe `CategorieModelTest`.
+
+
+ 
