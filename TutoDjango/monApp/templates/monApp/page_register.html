@@ -3,46 +3,65 @@
 {% block title %}Inscription{% endblock %}
 
 {% block contenu %}
-<div class="align-center col-8 offset-2 my-5">
-    <h2 class="mb-3">S'inscrire</h2>
-    <hr/>
+<div class="row justify-content-center my-5">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Créer un compte</h3>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}"> {{ message }} </div>
+                    {% endfor %}
+                {% endif %}
 
-    {% if messages %}
-        <div class="mb-3">
-            {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+                <form method="POST" action="{% url 'monApp:register' %}" autocomplete="off">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+
+                    <div class="mb-3">
+                        {{ form.username.label_tag }}
+                        {{ form.username }}
+                        {% if form.username.help_text %}
+                            <small class="form-text text-muted">{{ form.username.help_text }}</small>
+                        {% endif %}
+                        {% if form.username.errors %}
+                            <div class="text-danger small">{{ form.username.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.password1.label_tag }}
+                        {{ form.password1 }}
+                        {% if form.password1.help_text %}
+                            <small class="form-text text-muted">{{ form.password1.help_text }}</small>
+                        {% endif %}
+                        {% if form.password1.errors %}
+                            <div class="text-danger small">{{ form.password1.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.password2.label_tag }}
+                        {{ form.password2 }}
+                        {% if form.password2.errors %}
+                            <div class="text-danger small">{{ form.password2.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Email (optionnel)</label>
+                        <input class="form-control" type="email" name="mail" placeholder="votre@email.com" value="{{ request.POST.mail|default:'' }}">
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'monApp:login' %}" class="text-muted">Vous avez déjà un compte ?</a>
+                        <button type="submit" class="btn btn-success">S'inscrire</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    {% endif %}
-
-    <form method="POST" action="{% url 'monApp:register' %}" autocomplete="off">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <div class="form-group mb-3">
-            {{ form.username.label_tag }}
-            {{ form.username }}
-            {% if form.username.errors %}
-                <div class="text-danger small">{{ form.username.errors }}</div>
-            {% endif %}
-
-            {{ form.password1.label_tag }}
-            {{ form.password1 }}
-            {% if form.password1.errors %}
-                <div class="text-danger small">{{ form.password1.errors }}</div>
-            {% endif %}
-
-            {{ form.password2.label_tag }}
-            {{ form.password2 }}
-            {% if form.password2.errors %}
-                <div class="text-danger small">{{ form.password2.errors }}</div>
-            {% endif %}
-
-            <label>Email (optionnel)</label>
-            <input class="form-control" type="email" name="mail" placeholder="Email" value="{{ request.POST.mail|default:'' }}">
-        </div>
-        <button type="submit" class="btn btn-success mt-2">S'inscrire</button>
-    </form>
+    </div>
 </div>
 {% endblock %}
