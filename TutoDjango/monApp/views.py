@@ -174,12 +174,14 @@ class CategorieDeleteView(DeleteView):
 class StatutListView(ListView):
     model = Statut
     template_name = "monApp/list_statuts.html"
-    context_object_name = "statuts"
+    # template expects 'stts'
+    context_object_name = "stts"
     def get_queryset(self):
         query = self.request.GET.get('q')
+        qs = Statut.objects.annotate(nb_produits=Count('produits_statut'))
         if query:
-            return Statut.objects.filter(libelle__icontains=query)
-        return Statut.objects.all()
+            return qs.filter(libelle__icontains=query)
+        return qs
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['titremenu'] = "Liste des statuts"
