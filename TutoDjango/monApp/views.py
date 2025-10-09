@@ -18,7 +18,12 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         param = self.kwargs.get('param', '')
+        # Provide template variables expected by page_home.html
         context['titremenu'] = "Accueil"
+        context['titretitre'] = "Mon App Django - Accueil"
+        context['page_home'] = True
+        context['param'] = param
+        context['titreh1'] = "Bienvenue"
         context['message'] = f"Vous avez cherché : {param}" if param else "Bienvenue sur la page d'accueil"
         return context
 
