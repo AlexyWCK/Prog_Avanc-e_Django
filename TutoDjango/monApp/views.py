@@ -47,6 +47,11 @@ class RegisterView(CreateView):
     form_class = UserCreationForm
     def form_valid(self, form):
         user = form.save()
+        # save optional email field if provided from the template extra input 'mail'
+        mail = self.request.POST.get('mail')
+        if mail:
+            user.email = mail
+            user.save()
         login(self.request, user)
         return redirect('monApp:home')
 
