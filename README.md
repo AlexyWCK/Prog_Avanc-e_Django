@@ -132,8 +132,9 @@ Pour ce TD (25/09), j’ai ajouté :
   
 # TP N°4 – Dessert
 
-  - **Test Catégories** : Ajout des tests pour les catégories avec la classe `CategorieModelTest`.
+  - **Test Modèle** : Ajout des tests pour le modèle avec la classe `CategorieModelTest`.
   - **Test Formulaires** : Ajout des tests pour les formulaires avec la classe `CategorieFormTest`.
+  - **Test URL** : Ajout des tests pour les URLs avec la classe `CategorieUrlsTest`.
 
 
  
