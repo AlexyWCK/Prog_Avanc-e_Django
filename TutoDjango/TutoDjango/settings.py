@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     'monApp',
     'debug_toolbar',
     'django_bootstrap5',
+    # django-extensions provides the `graph_models` management command
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
