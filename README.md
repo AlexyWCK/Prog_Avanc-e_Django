@@ -137,4 +137,13 @@ Pour ce TD (25/09), j’ai ajouté :
   - **Test URL** : Ajout des tests pour les URLs avec la classe `CategorieUrlsTest`.
 
 
- 
+Temps personnel (10/10), j’ai ajouté :
+
+- **Test Views** : Ajout des tests pour les views avec les classes `CategorieCreateViewTest`, `CategorieDetailViewTest`, `CategorieUpdateViewTest` et `CategorieDeleteViewTest`.
+- **Installation et execution du coverage** : Execution des tests + coverage :
+
+![coverage](assets/coverage.png)
+
+- **Installation et execution du coverage html** : Execution des tests + coverage en version html (files, functions et classes):
+
+![coverage_html](assets/coverage_html.png)
