@@ -1,0 +1,3 @@
+[run]
+omit =
+    TutoDjango/monApp/views.py
