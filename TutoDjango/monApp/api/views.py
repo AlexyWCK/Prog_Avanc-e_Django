@@ -1,7 +1,14 @@
 from rest_framework import viewsets, generics
+from rest_framework.pagination import PageNumberPagination
 from monApp.models import Categorie, Produit, Statut, Rayon, Contenir
-from .serializers import CategorieSerializer, ProduitSerializer, StatutSerializer, RayonSerializer, ContenirSerializer
+from .serializers import CategorieSerializer, CategorieSerializerList, ProduitSerializer, StatutSerializer, RayonSerializer, ContenirSerializer
 from datetime import datetime
+
+# Pagination personnalisée
+class SmallResultsSetPagination(PageNumberPagination):
+    page_size = 2  # Minimum de résultats par page
+    page_size_query_param = 'page_size'
+    max_page_size = 4  # Maximum de résultats par page
 
 # Vues génériques
 class CategorieAPIView(generics.ListCreateAPIView):
@@ -48,21 +55,27 @@ class ContenirDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 # ModelViewSet
 class CategorieViewSet(viewsets.ModelViewSet):
     queryset = Categorie.objects.all().prefetch_related('produits_categorie')
-    serializer_class = CategorieSerializer
+    serializer_class = CategorieSerializerList
+    detail_serializer_class = CategorieSerializer 
+    pagination_class = SmallResultsSetPagination 
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return self.detail_serializer_class
+        return super().get_serializer_class()
 
 class ProduitViewSet(viewsets.ModelViewSet):
     serializer_class = ProduitSerializer
 
     def get_queryset(self):
         queryset = Produit.objects.all()
-        # Filtrage dynamique par date via paramètre d'URL
         datefilter = self.request.GET.get('datefilter')
         if datefilter:
             try:
                 datefilter = datetime.strptime(datefilter, "%d/%m/%Y")
                 queryset = queryset.filter(dateFabrication__gt=datefilter)
             except ValueError:
-                pass 
+                pass
         return queryset
 
 class StatutViewSet(viewsets.ReadOnlyModelViewSet):
