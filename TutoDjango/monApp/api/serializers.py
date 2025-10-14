@@ -2,6 +2,14 @@ from rest_framework import serializers
 from monApp.models import Categorie, Produit, Statut, Rayon, Contenir
 from datetime import datetime
 
+class MultipleSerializerMixin:
+    detail_serializer_class = None
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve' and self.detail_serializer_class is not None:
+            return self.detail_serializer_class
+        return super().get_serializer_class()
+
 class ProduitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produit
@@ -10,7 +18,17 @@ class ProduitSerializer(serializers.ModelSerializer):
 class CategorieSerializerList(serializers.ModelSerializer):
     class Meta:
         model = Categorie
-        fields = ['idCat', 'nomCat']  # Sans produits_categorie
+        fields = ['idCat', 'nomCat']
+
+    def validate_nomCat(self, value):
+        if Categorie.objects.filter(nomCat=value).exists():
+            raise serializers.ValidationError('La catégorie existe déjà')
+        return value
+
+    def validate(self, data):
+        if len(data['nomCat']) > 100:
+            raise serializers.ValidationError('Le nom de la catégorie ne doit pas dépasser 100 caractères.')
+        return data
 
 class CategorieSerializer(serializers.ModelSerializer):
     produits_categorie = serializers.SerializerMethodField()
@@ -25,6 +43,11 @@ class CategorieSerializer(serializers.ModelSerializer):
             return []
         serializer = ProduitSerializer(queryset, many=True)
         return serializer.data
+
+class StatutSerializerList(serializers.ModelSerializer):
+    class Meta:
+        model = Statut
+        fields = ['idStatut', 'libelle']
 
 class StatutSerializer(serializers.ModelSerializer):
     produits_statut = ProduitSerializer(many=True)

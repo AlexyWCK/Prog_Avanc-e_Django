@@ -1,7 +1,7 @@
 from rest_framework import viewsets, generics
 from rest_framework.pagination import PageNumberPagination
 from monApp.models import Categorie, Produit, Statut, Rayon, Contenir
-from .serializers import CategorieSerializer, CategorieSerializerList, ProduitSerializer, StatutSerializer, RayonSerializer, ContenirSerializer
+from .serializers import CategorieSerializer, CategorieSerializerList, MultipleSerializerMixin, ProduitSerializer, StatutSerializer, StatutSerializerList, RayonSerializer, ContenirSerializer
 from datetime import datetime
 
 # Pagination personnalisée
@@ -53,16 +53,11 @@ class ContenirDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
 
 # ModelViewSet
-class CategorieViewSet(viewsets.ModelViewSet):
+class CategorieViewSet(MultipleSerializerMixin, viewsets.ModelViewSet):
     queryset = Categorie.objects.all().prefetch_related('produits_categorie')
     serializer_class = CategorieSerializerList
-    detail_serializer_class = CategorieSerializer 
-    pagination_class = SmallResultsSetPagination 
-
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return self.detail_serializer_class
-        return super().get_serializer_class()
+    detail_serializer_class = CategorieSerializer
+    pagination_class = SmallResultsSetPagination
 
 class ProduitViewSet(viewsets.ModelViewSet):
     serializer_class = ProduitSerializer
@@ -78,9 +73,10 @@ class ProduitViewSet(viewsets.ModelViewSet):
                 pass
         return queryset
 
-class StatutViewSet(viewsets.ReadOnlyModelViewSet):
+class StatutViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Statut.objects.all().prefetch_related('produits_statut')
-    serializer_class = StatutSerializer
+    serializer_class = StatutSerializerList
+    detail_serializer_class = StatutSerializer
 
 class RayonViewSet(viewsets.ModelViewSet):
     queryset = Rayon.objects.all()
