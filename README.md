@@ -71,6 +71,7 @@ Séance suivante :
 - **Ajout du bouton Admin** dans la barre de navigation.  
 - **Style amélioré** des pages : boutons, mise en page, typographie, et mise en valeur du contenu.  
 
+___
 
 # TD3 - Détails des produits et début de l’authentification
 
@@ -99,7 +100,9 @@ Pour ce TD (25/09), j’ai ajouté :
 - **Ajout d'un formulaire de contact** : Modification de `page_home.html`, ajout d'une nouvelle classe dans views.py : `ContactView` avec son url.
 - **Ajout d'une redirection vers une page de confirmation** : Une fois le formulaire envoyé, l'utilisateur est redirigé vers une page de confirmation `email_sent.html`.
 
-# TP3 - DGestion CRUD des Produits et ModelForms avec Django
+___
+
+# TP3 - Gestion CRUD des Produits et ModelForms avec Django
 
 - **Ajout d'un formulaire de création de produits** : Ajout d'un produit via un formulaire intégré avec `create_produit.html` et `ProduitCreate.html`
 
@@ -114,7 +117,10 @@ Pour ce TD (25/09), j’ai ajouté :
   - **Mis de coté Rayon et Statuts** : Fontionnalités déja implémentées pour Prdouit et Catégorie.
   - **Résolution bugs admin** : Bug admin et BD lié aux produits.
 
+___
+
 # TD N°4 – Dessert
+
   - **Amélioration ergonomiques** : Avec les `ProduitListView`,`CategorieListView` et `StatutListView`.
   - **Ajout CRUD pour toutes les entités** : Ajout des html, des methodes dans `views.py` et des routes dans `utls.py`.
   - **Sécurisation login** : Si je ne suis pas connecté, impossible de modifier ou ajouter donc redirection vers login.
@@ -130,6 +136,8 @@ Pour ce TD (25/09), j’ai ajouté :
   - **CSS** : Modification du style général des pages pour mettre en forme les fonctionnalités.
   - **MCD** : Ajout du MCD correspondant à mon application
   
+___
+
 # TP N°4 – Dessert
 
   - **Test Modèle** : Ajout des tests pour le modèle avec la classe `CategorieModelTest`.
@@ -147,3 +155,23 @@ Temps personnel (10/10), j’ai ajouté :
 - **Installation et execution du coverage html** : Execution des tests + coverage en version html (files, functions et classes):
 
 ![coverage_html](assets/coverage_html.png)
+
+___
+
+# TD N°5 – Digestif
+
+Pour ce TD (14/10), j’ai ajouté :
+
+- **API REST** : Mise en place d’une API avec Django Rest Framework, utilisant `ModelViewSet`, `ReadOnlyModelViewSet` (pour Statut), et `DefaultRouter` pour les URLs.
+
+- **Filtrage** : Filtres dans `ProduitViewSet` (par categorie et datefilter) et dans `CategorieSerializer` (≥ 2 produits après 13/08/2025).
+
+- **Optimisation** : `prefetch_related` pour réduire les requêtes SQL, serializers imbriqués pour inclure les produits.
+
+- **Pagination** : Pagination globale (LimitOffsetPagination, PAGE_SIZE=1) et personnalisée pour `CategorieViewSet` (2-4 éléments).
+
+- **Actions du client** : CRUD avec serializers différents pour list et retrieve via get_serializer_class.
+
+- **Mixin et validations** : `MultipleSerializerMixin` pour gérer les serializers, validations dans `CategorieSerializerList` (doublons, max 100 caractères).
+
+Il me manque la partie Authentification que je ferai jeudi apres/avant le QCM

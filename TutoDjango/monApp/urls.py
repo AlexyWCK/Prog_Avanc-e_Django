@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 app_name = 'monApp'
@@ -35,4 +35,5 @@ urlpatterns = [
     path('logout/', views.DisconnectView.as_view(), name='logout'),
     path('contact/', views.ContactView.as_view(), name='contact'),
     path('email-sent/', views.EmailSentView.as_view(), name='email-sent'),
+    path('api/', include('monApp.api.urls')),
 ]
