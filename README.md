@@ -159,3 +159,19 @@ Temps personnel (10/10), j’ai ajouté :
 ___
 
 # TD N°5 – Digestif
+
+Pour ce TD (14/10), j’ai ajouté :
+
+- **API REST** : Mise en place d’une API avec Django Rest Framework, utilisant `ModelViewSet`, `ReadOnlyModelViewSet` (pour Statut), et `DefaultRouter` pour les URLs.
+
+- **Filtrage** : Filtres dans `ProduitViewSet` (par categorie et datefilter) et dans `CategorieSerializer` (≥ 2 produits après 13/08/2025).
+
+- **Optimisation** : `prefetch_related` pour réduire les requêtes SQL, serializers imbriqués pour inclure les produits.
+
+- **Pagination** : Pagination globale (LimitOffsetPagination, PAGE_SIZE=1) et personnalisée pour `CategorieViewSet` (2-4 éléments).
+
+- **Actions du client** : CRUD avec serializers différents pour list et retrieve via get_serializer_class.
+
+- **Mixin et validations** : `MultipleSerializerMixin` pour gérer les serializers, validations dans `CategorieSerializerList` (doublons, max 100 caractères).
+
+Il me manque la partie Authentification que je ferai jeudi apres/avant le QCM
