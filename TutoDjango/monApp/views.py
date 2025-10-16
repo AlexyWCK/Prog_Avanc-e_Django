@@ -145,15 +145,12 @@ class CategorieCreateView(CreateView):
 class CategorieDetailView(DetailView):
     model = Categorie
     template_name = "monApp/detail_categorie.html"
-    # Template expects `ctgr` as the object name
     context_object_name = "ctgr"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['titremenu'] = f"Détails de la catégorie : {self.object.nomCat}"
-        # add the products for this category
         prdts = Produit.objects.filter(categorie=self.object)
         context['prdts'] = prdts
-        # provide nb_produits attribute for compatibility with template
         try:
             context['ctgr'].nb_produits = prdts.count()
         except Exception:
@@ -179,7 +176,6 @@ class CategorieDeleteView(DeleteView):
 class StatutListView(ListView):
     model = Statut
     template_name = "monApp/list_statuts.html"
-    # template expects 'stts'
     context_object_name = "stts"
     def get_queryset(self):
         query = self.request.GET.get('q')
@@ -238,12 +234,10 @@ class RayonListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['titremenu'] = "Liste des rayons"
-        # compute total stock value per rayon to send to template as ryns_dt
         ryns = context.get('rayons', Rayon.objects.all())
         ryns_dt = []
         from django.db.models import Sum, F as _F
         for r in ryns:
-            # Sum prixUnitaireProd * Qte for all Contenir in this rayon
             total = Contenir.objects.filter(rayon=r).aggregate(total_stock=Sum(_F('Qte') * _F('produit__prixUnitaireProd')))['total_stock'] or 0
             ryns_dt.append({'rayon': r, 'total_stock': total})
         context['ryns_dt'] = ryns_dt
@@ -265,7 +259,6 @@ class RayonDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['titremenu'] = f"Détails du rayon : {self.object.nomRayon}"
-        # Prepare product details in this rayon
         contenirs = Contenir.objects.filter(rayon=self.object).select_related('produit')
         prdts_dt = []
         total_nb = 0
@@ -329,11 +322,9 @@ class ContenirCreateView(CreateView):
             messages.error(self.request, "Rayon introuvable.")
             return redirect('monApp:lst-ryns')
 
-        # Use a transaction with get_or_create and F() to atomically create or update quantity
         with transaction.atomic():
             obj, created = Contenir.objects.select_for_update().get_or_create(produit=produit, rayon=rayon, defaults={'Qte': qte})
             if not created:
-                # increment atomically
                 Contenir.objects.filter(pk=obj.pk).update(Qte=F('Qte') + qte)
                 messages.success(self.request, f"Quantité mise à jour pour {produit.intituleProd} dans {rayon.nomRayon}.")
             else:
