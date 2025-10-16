@@ -2,6 +2,15 @@
 ![logo Django](assets/django.png)
 ___
 
+## 🚀 Lancer le projet
+
+Cloner le dépôt, se placer à la racine du projet puis exécuter la commande suivante :
+
+```bash
+./lancement.sh
+```
+___
+
 # TD1 - Première application Django
 
 Projet réalisé dans le cadre du TD1 de Programmation Avancée.  
@@ -174,4 +183,8 @@ Pour ce TD (14/10), j’ai ajouté :
 
 - **Mixin et validations** : `MultipleSerializerMixin` pour gérer les serializers, validations dans `CategorieSerializerList` (doublons, max 100 caractères).
 
-Il me manque la partie Authentification que je ferai jeudi apres/avant le QCM
+Je ne fais pas volontairement la partie Authentification pour améliorer mon code et ajouter de nouvelles fonctionnalités
+
+Pour ce TP (16/10), j’ai ajouté :
+
+- **Documentation Swagger** : La documentation Swagger de Django Rest avec openAPI est disponible allant sur cette url : http://127.0.0.1:8000/monApp/api/swagger/

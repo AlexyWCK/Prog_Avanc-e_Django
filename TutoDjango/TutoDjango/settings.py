@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'django_extensions',
     'rest_framework',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
