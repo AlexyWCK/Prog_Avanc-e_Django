@@ -188,3 +188,9 @@ Je ne fais pas volontairement la partie Authentification pour améliorer mon cod
 Pour ce TP (16/10), j’ai ajouté :
 
 - **Documentation Swagger** : La documentation Swagger de Django Rest avec openAPI est disponible allant sur cette url : http://127.0.0.1:8000/monApp/api/swagger/
+
+- **Test Email** : Ajout du test d'envoi d'email dans tests/Mail avec la classe `ContactMailTest`:
+
+![test_mail](assets/test_mail.png)
+
+Commencement d'une nouvelle fonctionnalité : Ajout d'un dashbord du magasin dans la page d'accueil. (à finir sur le temps personnel)
